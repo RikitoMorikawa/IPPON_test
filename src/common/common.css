@@ -1,0 +1,44 @@
+.customCheckbox .MuiCheckbox-root {
+    color: #989898;
+}
+.customCheckbox .Mui-checked {
+    color: #3E3E3E !important;
+}
+.inputGroupWrapperWidth, .radioFormGroup{
+    width: 374px;
+}
+.inputGroupWrapperWidth.modalInput, .radioFormGroup.modalInput{
+    width: 377px;
+}
+.inputGroupWrapper.flexCol .inputGroupWrapperWidth.modalInput{
+    width: 100%;
+}
+.cellFlex{
+    display: flex;
+    align-items: center;
+}
+.notification_status{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 32px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+}
+.notification_status.posted{
+    background: #EDFFEE;
+    color: #188D1C;
+    border: 1px solid #A9DEAB;
+}
+.notification_status.notification_set{
+    background: #FFF2EB;
+    color: #DA7238;
+    border: 1px solid #FFD5BE;
+}
+.notification_status.draft{
+    background: #F5F5F5;
+    color: #989898;
+    border: 1px solid #D9D9D9;
+}

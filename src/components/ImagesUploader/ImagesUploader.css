@@ -1,0 +1,147 @@
+
+/* 
+export const SContentForUploadingImage = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+  border: none;
+  background: transpalent;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: ${(props) =>
+    props.Width === '131px' || props.Width === '180px' ? '20px' : '10px'};
+`; */
+
+.containerForImageToUpload{
+  align-items: center;
+  border: none;
+  background: transpalent;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: #f5f5f5;
+  position: relative;
+  width: 237px;
+  height: 237px;
+}
+
+.areaToDropImage{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  gap: 0;
+  border:1px dashed #989898;
+  width: 237px;
+  height: 237px;
+  /* height: 237px; */
+  background: transpalent;
+  box-sizing: border-box;
+  background: #f5f5f5;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: auto;
+}
+.areaToDropImage.isDrag{
+  border:1px dashed #0B9DBD;
+  background:#F7FBFD;
+}
+
+.sentencesOfDropArea{
+  font-family: 'Noto Sans JP';
+  font-style: normal;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  color: #3E3E3E;
+  font-weight:700;
+  margin: 0;
+  margin-top: 10px;
+}
+
+.sentencesOfDropAreaSpan{
+  display: block;
+  padding-top: 5px;
+  color: #989898;
+}
+
+.imageButton{
+  padding: 0 10px;
+  height: 25px;
+  margin-top: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #3F97D5;
+  border: 1px solid #3F97D5;
+  border-radius: 15.63px;
+}
+
+.sImage{
+  width: 237px;
+  height: 237px;
+  object-fit: contain;
+}
+
+.imageBlock{
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.imageTitle{
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+  text-align: center;
+  word-break: break-all;
+  color:#3e3e3e;
+}
+
+.imageTitleSpan{
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.deleteButton{
+  display: block;
+  top: -5%;
+  right:-5%;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  background-image: "url(\"data:image/svg+xml;utf8,<svg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='0' y='0' width='10' height='10' fill='white' opacity='0' /><path d='M4.99903 5.70153L1.61703 9.0837C1.5247 9.17592 1.40864 9.22314 1.26886 9.22537C1.1292 9.22748 1.01103 9.18025 0.914365 9.0837C0.817809 8.98703 0.769531 8.86992 0.769531 8.73237C0.769531 8.59481 0.817809 8.4777 0.914365 8.38103L4.29653 4.99903L0.914365 1.61703C0.822142 1.5247 0.77492 1.40864 0.772698 1.26886C0.770587 1.1292 0.817809 1.01103 0.914365 0.914365C1.01103 0.817809 1.12814 0.769531 1.2657 0.769531C1.40325 0.769531 1.52036 0.817809 1.61703 0.914365L4.99903 4.29653L8.38103 0.914365C8.47336 0.822142 8.58942 0.77492 8.7292 0.772698C8.86886 0.770587 8.98703 0.817809 9.0837 0.914365C9.18025 1.01103 9.22853 1.12814 9.22853 1.2657C9.22853 1.40325 9.18025 1.52037 9.0837 1.61703L5.70153 4.99903L9.0837 8.38103C9.17592 8.47337 9.22314 8.58942 9.22536 8.7292C9.22748 8.86887 9.18025 8.98703 9.0837 9.0837C8.98703 9.18025 8.86992 9.22853 8.73236 9.22853C8.59481 9.22853 8.4777 9.18025 8.38103 9.0837L4.99903 5.70153Z' fill='%23F7FBFD'/></svg>\")";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #3e3e3e;
+  border-radius: 50%;
+}
+
+.imageWrapper{
+  position: relative;
+  border-radius: 10px;
+  background: transpalent;
+  width: 237px;
+  height: 237px;
+  box-sizing: border-box;
+  background: #BFE6EF;
+}
+
+.spanWithBorder{
+  border-bottom: 1px solid #3e3e3e;
+}
+
+.deleteIcon{
+  position: absolute;
+  top: 11px;
+  right: 11px;
+  pointer-events: all;
+  cursor: pointer;
+}

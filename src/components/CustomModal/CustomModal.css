@@ -1,0 +1,30 @@
+.modalBox{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 304px;
+    background: #fff !important;
+    border-radius: 10px;
+    box-shadow: 0px 1px 24px 0px #5B5B5B40;
+    
+}
+.modalBox.createModal{
+    width: 601px;
+}
+.modalBox.otherModal{
+    width: 304px;
+}
+.modalBox.flexColModal{
+    width: 508px;
+}
+.modalBoxWrapper{
+    position: relative;
+    padding: 20px;
+}
+.closeIcon{
+    position: absolute;
+    right: 21px;
+    top: 17px;
+    cursor: pointer;
+}

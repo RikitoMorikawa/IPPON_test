@@ -1,0 +1,26 @@
+.custom-textfield .MuiOutlinedInput-root {
+    height: 34px;
+    border-radius: 8px;
+  }
+  
+  .custom-textfield .MuiOutlinedInput-root fieldset {
+    border-color: #d9d9d9; 
+  }
+  
+  .custom-textfield .MuiOutlinedInput-root:hover fieldset {
+    border-color: #d9d9d9; 
+  }
+  
+  .custom-textfield .MuiOutlinedInput-root.Mui-focused fieldset {
+    border-color: #d9d9d9 !important; 
+  }
+  
+  .custom-textfield .MuiOutlinedInput-input {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .custom-textfield .MuiOutlinedInput-input::placeholder {
+    font-size: 12px;
+    color: #3e3e3e;
+  }

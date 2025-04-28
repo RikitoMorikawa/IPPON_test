@@ -1,0 +1,70 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.formContainer{
+    width: 334px;
+    border-radius: 20px;
+    box-shadow: 0px 2px 8px 0px #0000001A;
+    overflow: hidden;
+}
+.fieldContainer{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.inputContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.button{
+    background: #0D99FF !important;
+    border-radius: 6px !important;
+}
+.buttonDisable{
+    background: #BBDAF1 !important;
+    color: #F5F5F5 !important;
+}
+.link{
+    color: #989898 !important;
+    font-size: 12px !important;
+    text-align: center;
+    justify-content: center;
+}
+.logoContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.intoText {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    padding-left: 7px;
+}
+
+.check_mail_content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.check_mail_title{
+    font-size: 14px;
+    font-weight: 700;
+    color: #3E3E3E;
+    margin: 0;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.check_mail_text{
+    font-size: 12px;
+    color: #3E3E3E;
+    margin: 0;
+}
