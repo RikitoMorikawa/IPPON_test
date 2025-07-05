@@ -4,7 +4,7 @@ import { useNavigate,useSearchParams } from 'react-router';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Box, Button} from '@mui/material';
-import Logo from '../../../assets/logo.png';
+import Logo from '../../../assets/logo.jpg';
 import SuccessImg from '../../../assets/check_circle.png'
 import CustomInput from '../../../components/CustomInput';
 import AuthenticationStatus from '../../../components/AuthenticationStatus';
@@ -14,7 +14,7 @@ import { AppDispatch } from '../../../store';
 import { changeMemberPassword, changeMemberPasswordByAdmin, forgotPassword } from '../../../store/authSlice';
 import '../Login/Login.css'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 const ForgotPassword : React.FC = () => {
   const [loginStatus, setLoginStatus] = useState('');
   const navigate = useNavigate()
@@ -25,7 +25,6 @@ const ForgotPassword : React.FC = () => {
   const token = searchParams.get('token');
   const iv = searchParams.get('iv');
   const paramsEmail = searchParams.get('email');
-  console.log("Params email ", paramsEmail)
 
   const {
     register,
@@ -33,7 +32,6 @@ const ForgotPassword : React.FC = () => {
     formState: { errors },
     watch,
   } = useForm<any>(); 
-  console.log("Iv ", iv)
 
   const passwordValue = watch('password');
   const oldPasswordValue = watch('old_password');
@@ -93,7 +91,7 @@ const ForgotPassword : React.FC = () => {
           <>
             <span style={{display:'flex', justifyContent:'center'}}><img src={SuccessImg} alt="check mark icon"/></span>
             <p style={{fontSize:'12px',fontWeight: '400',lineHeight:'1.5',textAlign:'center',margin:'0'}}>新しいパスワードでアカウントから<br/>ログインできます。</p>
-            <Button type="button" onClick={(e)=>navigatePageHandler(e)} variant="contained" className={`button`}>
+            <Button type="button" disableElevation onClick={(e)=>navigatePageHandler(e)} variant="contained" className={`button`}>
             ログイン
         </Button>
           </> : <><Box className='check_mail_content'>
@@ -149,7 +147,18 @@ const ForgotPassword : React.FC = () => {
           /></>}
 
         </Box>
-        <Button type="submit" variant="contained" onMouseDown={(e) => e.preventDefault()} className={`button ${!isHasValue ? 'buttonDisable': ''}`} disabled={!isHasValue}>
+        <Button type="submit" 
+          disableElevation 
+          variant="contained" 
+          onMouseDown={(e) => e.preventDefault()} 
+          className={`button ${!isHasValue ? 'buttonDisable': ''}`} 
+          disabled={!isHasValue}
+          sx={{
+            '&:disabled': {
+              backgroundColor: '#BFE6EF !important',
+            }
+          }}
+        >
           ログイン
         </Button></>
         }  
@@ -158,5 +167,5 @@ const ForgotPassword : React.FC = () => {
   </Box>
   )
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
+ 
 export default ForgotPassword

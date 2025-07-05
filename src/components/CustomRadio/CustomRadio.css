@@ -1,16 +1,17 @@
-.radioFormLabel{
-    margin-right: 20px !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    color: #3E3E3E !important;
+.radioFormLabel {
+  margin-right: 20px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #3e3e3e !important;
+  text-align: right;
 }
-.radioFormControl{
-    margin-bottom: 10px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
+.radioFormControl {
+  margin-bottom: 10px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
 }
-.radioFormGroup{
-    display:flex !important;
-     flex-direction:row !important;
+.radioFormGroup {
+  display: flex !important;
+  flex-direction: row !important;
 }

@@ -1,7 +1,4 @@
-import { Business } from "@mui/icons-material";
 import {
-  Breadcrumbs,
-  Icon,
   Typography,
   Box,
   Stack,
@@ -13,31 +10,49 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 // import Cookies from 'js-cookie';
-import { Link, useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
+import DynamicBreadcrumb from "./DynamicBreadCrumb";
+import profileImg from "../../assets/profile_img.png";
+import { useSelector, useDispatch } from "react-redux";
+import Cookies from "js-cookie";
+import { logout, setRedirectPath } from "../../store/authSlice";
+import { AppDispatch } from "../../store";
 
 // const member_id = Cookies.get('employeeID')
-const settings = [
-  {
-    title: "Profile",
-    link: `/members/profile`,
-  },
-  {
-    title: "Account",
-    link: "/",
-  },
-  {
-    title: "Dashboard",
-    link: "/",
-  },
-  {
-    title: "Logout",
-    link: "/login",
-  },
-]
+
 const Header = () => {
+  const settings = [
+    // {
+    //   title: "Profile",
+    //   link: `/dashboard`,
+    // },
+    // {
+    //   title: "Account",
+    //   link: "/dashboard",
+    // },
+    {
+      title: "プロフィール",
+      link: `/setting/employees/` + Cookies.get("employeeID"),
+    },
+    {
+      title: "ログアウト",
+      action: "logout",
+    },
+  ];
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: propertiesData } = useSelector(
+    (state: any) => state.properties.detailed
+  );
+  const { data: inquiryData } = useSelector(
+    (state: any) => state.inquiry.detailed
+  );
+  const { data: propertiesInquiriesData } = useSelector(
+    (state: any) => state.propertiesInquiries.detailed
+  );
+  const clientName = Cookies.get("clientName");
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -46,97 +61,140 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  const handleClickMenuItem = (link:string) => {
-    navigate(link);
-    handleCloseUserMenu()
-  }
+  const handleClickMenuItem = (setting: any) => {
+    if (setting.action === "logout") {
+      // Save current location before logout
+      dispatch(setRedirectPath(location.pathname + location.search));
+      // Dispatch logout action to clear all auth state and cookies
+      dispatch(logout());
+      navigate("/login");
+    } else if (setting.link) {
+      navigate(setting.link);
+    }
+    handleCloseUserMenu();
+  };
 
   return (
-    <Box
-      height={50}
-      display={"flex"}
-      alignItems={"center"}
-      justifyContent={"space-between"}>
-      <Stack width={"100%"} direction={"row"}>
-        <Icon
-          sx={{
-            width: 26,
-            height: 26,
-            backgroundColor: "#2A3246",
-            color: "#FFFFFF",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 2,
-            mr: 1,
-          }}>
-          <Business fontSize='small' sx={{ fontSize: 14 }} />
-        </Icon>
-        <Breadcrumbs aria-label='breadcrumb' sx={{ width: "100%" }}>
-          <Link
-            to='/clients'
-            style={{
-              color: "#989898",
-              fontSize: 12,
-              fontWeight: "bold",
-              textDecoration: "none",
-            }}>
-            顧客管理
-          </Link>
-          <Typography
-            sx={{ color: "#3E3E3E", fontSize: 12, fontWeight: "bold" }}>
-            テスト不動産
-          </Typography>
-        </Breadcrumbs>
-      </Stack>
+    <>
+      <Box
+        height={50}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+      >
+        <DynamicBreadcrumb
+          propName={propertiesData?.name || ""}
+          customerName={(() => {
+            // inquiry.detailedから顧客名を取得
+            const inquiryCustomerName =
+              inquiryData.inquiry?.customer?.first_name &&
+              inquiryData.inquiry?.customer?.last_name
+                ? `${inquiryData.inquiry.customer.first_name.trim()} ${inquiryData.inquiry.customer.last_name.trim()}`
+                : "";
 
-      <Box sx={{ flexGrow: 0 }}>
-        <Tooltip title='Open profile'>
+            // propertiesInquiries.detailedから顧客名を取得
+            const propertiesInquiryCustomerName =
+              propertiesInquiriesData &&
+              Array.isArray(propertiesInquiriesData.items) &&
+              propertiesInquiriesData.items.length > 0 &&
+              propertiesInquiriesData.items[0].inquiry?.customer?.first_name &&
+              propertiesInquiriesData.items[0].inquiry?.customer?.last_name
+                ? `${propertiesInquiriesData.items[0].inquiry.customer.first_name.trim()} ${propertiesInquiriesData.items[0].inquiry.customer.last_name.trim()}`
+                : "";
+
+            // どちらかが存在すれば返す（inquiry.detailedを優先）
+            return inquiryCustomerName || propertiesInquiryCustomerName || "";
+          })()}
+        />
+        {/* <IconButton 
+        sx={{ 
+          p: 0.6, 
+          mr: 2, 
+          borderRadius: 2, 
+          backgroundColor: 'transparent',
+          border: '1px solid #e0e0e0',
+          '&:hover': {
+            backgroundColor: '#f5f5f5'
+          }
+        }}
+      >
+        <NotificationsOutlined fontSize="small" sx={{color: 'grey'}} />
+      </IconButton> */}
+        <Box
+          sx={{
+            flexGrow: 0,
+            width: "50%",
+            display: { lg: "block", xs: "none" },
+          }}
+        >
           <Stack
             direction={"row"}
             alignItems={"center"}
-            width={91}
-            onClick={handleOpenUserMenu}
-            sx={{ cursor: "pointer" }}>
-            <IconButton sx={{ p: 0, mr: 0.6 }}>
-              <Avatar
-                alt='Remy Sharp'
-                src='/static/images/avatar/2.jpg'
-                sx={{ width: 25, height: 25 }}
-              />
-            </IconButton>
-            <Typography
-              variant='body2'
-              component='h5'
-              fontSize={14}
-              fontWeight={"bold"}>
-              佐藤 太郎
-            </Typography>
+            width={"100%"}
+            justifyContent={"flex-end"}
+          >
+            <Tooltip title="Open profile">
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                onClick={handleOpenUserMenu}
+                sx={{ cursor: "pointer", minWidth: "91px" }}
+              >
+                <IconButton
+                  sx={{ p: 0.5, mr: 0.6, border: "1px solid #e0e0e0" }}
+                >
+                  <Avatar
+                    alt={clientName}
+                    src={profileImg}
+                    sx={{ width: 25, height: 25 }}
+                  />
+                </IconButton>
+                <Typography
+                  variant="body2"
+                  component="h5"
+                  fontSize={14}
+                  fontWeight={"bold"}
+                  sx={{
+                    color: "#6E778A",
+                    borderBottom: "0.6px solid #6E778A",
+                    display: "inline-block",
+                  }}
+                >
+                  {clientName}
+                </Typography>
+              </Stack>
+            </Tooltip>
           </Stack>
-        </Tooltip>
-        <Menu
-          sx={{ mt: "45px" }}
-          id='menu-appbar'
-          anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={Boolean(anchorElUser)}
-          onClose={handleCloseUserMenu}>
-          {settings.map((setting,index) => (
-            <MenuItem key={index} onClick={()=>handleClickMenuItem(setting.link)}>
-              <Typography sx={{ textAlign: "center" }}>{setting.title}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting, index) => (
+              <MenuItem
+                key={index}
+                onClick={() => handleClickMenuItem(setting)}
+              >
+                <Typography sx={{ textAlign: "center" }}>
+                  {setting.title}
+                </Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

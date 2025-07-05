@@ -1,0 +1,32 @@
+.formStyle{
+    width: 66.66%;
+     display:flex;
+     justify-content:space-between;
+     flex-direction:column;
+}
+
+.imageWrapper{
+    width: 237px;
+    margin:0 auto;
+    height: 200px;
+    background: blue;
+}
+
+.buttonWrapper{
+    margin: 0 auto;
+}
+
+.dummyText{
+    opacity: 0;
+}
+
+.editBtn{
+    width: 20vh;
+    margin-left: 5rem !important;
+    margin-top: 1rem !important;
+}
+
+.editBtnChild{
+    margin-left: 7rem !important;
+    margin-top: 1rem !important;
+}

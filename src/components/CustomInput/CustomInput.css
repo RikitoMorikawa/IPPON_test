@@ -15,11 +15,11 @@
   }
   
   .formControl .MuiOutlinedInput-root:hover fieldset {
-    border-color: #0D99FF; 
+    border-color: #0B9DBD; 
   }
   
   .formControl .MuiOutlinedInput-root.Mui-focused fieldset {
-    border-color: #0D99FF;
+    border-color: #0B9DBD;
   }
   
   .formControl .MuiInputBase-input {
@@ -42,5 +42,5 @@
   }
   
   .formControlHelperTextNormal {
-    color: #0D99FF !important;
+    color: #0B9DBD !important;
   }

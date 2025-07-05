@@ -12,6 +12,12 @@
     align-items: flex-start;
     margin-bottom: 15px;
 }
+.inputGroupWrapper.isShowInColumn{
+    display: block;
+}
+.inputGroupWrapper.isShowInColumn.flexCol{
+    margin-bottom: 10px !important;
+}
 .inputLabel{
     display: flex;
     align-items: end;
@@ -21,4 +27,15 @@
     color: #3E3E3E !important;
     font-size: 12px !important;
     font-weight:700 !important;
+}
+.inputGroupWrapper.sp{
+    margin-bottom: 8px;
+}
+.properties .inputGroupWrapper.sp{
+    width: 100%;
+}
+.inputGroupWrapper.isShowInColumn .inputLabel{
+    justify-content: flex-start;
+    text-align: left !important;
+    width: inherit !important;
 }

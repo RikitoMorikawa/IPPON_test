@@ -1,0 +1,175 @@
+/* CustomerDetailsTable.css */
+.customer-details-container {
+  width: 100%;
+  background-color: #ffffff;
+}
+
+/* Horizontal scroll wrapper for mobile responsiveness */
+.table-scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  width: 100%;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
+/* Table content container - maintains minimum width */
+.table-content {
+  min-width: 700px; /* Minimum width to prevent content squishing */
+  width: 100%;
+}
+
+.table-header, .table-row {
+  display: flex;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+.table-row {
+  background-color: #ffffff;
+}
+
+.table-row:hover {
+  background-color: #fafafa;
+}
+
+.header-cell {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+/* For the table data cells */
+.table-cell {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.date-cell {
+  width: 15%;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.title-cell {
+  width: 20%;
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.customer-cell {
+  width: 20%;
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.category-cell {
+  width: 15%;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.content-cell {
+  width: 30%;
+  min-width: 200px;
+  flex-grow: 1;
+}
+
+.section-title {
+  padding: 12px 16px;
+  font-weight: 500;
+}
+
+.correspondence-content {
+  min-height: 100px;
+}
+
+/* Tablet responsiveness */
+@media (max-width: 768px) {
+  .table-content {
+    min-width: 600px; /* Reduce minimum width for tablets */
+  }
+  
+  .header-cell,
+  .table-cell {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .date-cell {
+    min-width: 90px;
+  }
+  
+  .title-cell,
+  .customer-cell {
+    min-width: 130px;
+  }
+  
+  .category-cell {
+    min-width: 90px;
+  }
+  
+  .content-cell {
+    min-width: 180px;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .table-content {
+    min-width: 500px; /* Further reduce for mobile */
+  }
+  
+  .header-cell,
+  .table-cell {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .date-cell {
+    min-width: 80px;
+  }
+  
+  .title-cell,
+  .customer-cell {
+    min-width: 120px;
+  }
+  
+  .category-cell {
+    min-width: 80px;
+  }
+  
+  .content-cell {
+    min-width: 160px;
+  }
+  
+  .section-title {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+}

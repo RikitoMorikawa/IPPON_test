@@ -1,34 +1,92 @@
-.inputGroupWrapper{
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-.inputGroupWrapper.flexRow{
-    flex-direction: row;
-}
-.inputGroupWrapper.flexCol{
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 15px;
-}
-.inputLabel{
-    display: flex;
-    align-items: end;
-justify-content: end;
-    text-align: right !important;
-    margin-right: 20px !important;
-    color: #3E3E3E !important;
-    font-size: 12px !important;
-    font-weight:700 !important;
+/* CustomFullWidthInputGroup.css */
+
+/* Always use vertical layout (label and input on separate lines) */
+.inputGroupWrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start;
+  gap: 4px; /* Consistent spacing between label and input */
+  width: 100%;
 }
 
-.hide-number-spinners input[type=number]::-webkit-inner-spin-button,
-.hide-number-spinners input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Force column layout for all cases */
+.inputGroupWrapper.flexCol,
+.inputGroupWrapper.flexRow {
+  flex-direction: column !important;
+  align-items: flex-start !important;
 }
 
-.hide-number-spinners input[type=number] {
-  -moz-appearance: textfield;
+/* Ensure labels are left-aligned and full width */
+.inputLabel {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  display: flex !important;
+  align-items: center;
+  width: 100% !important;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+/* Input wrapper always full width */
+.inputGroupWrapperWidth,
+.inputGroupWrapperWidth.mobile {
+  width: 100%;
+}
+
+/* Specific handling for calendar icon layout */
+.inputGroupWrapper.hasCalendar {
+  gap: 4px;
+}
+
+/* Maintain proper alignment for multiline inputs */
+.inputGroupWrapper.multiline .inputLabel {
+  align-self: flex-start;
+  padding-top: 8px;
+}
+
+/* Remove any horizontal layout styles */
+.inputGroupWrapper.flexRow .inputLabel {
+  width: 100% !important;
+  margin-bottom: 4px;
+}
+
+.inputGroupWrapper.flexRow .inputGroupWrapperWidth {
+  width: 100% !important;
+}
+
+/* Ensure proper spacing for inputs with icons */
+.inputGroupWrapper.hasCalendar.flexCol,
+.inputGroupWrapper.hasCalendar.flexRow {
+  gap: 4px;
+}
+
+/* Ensure proper spacing for error messages */
+.inputGroupWrapper .inputLabel {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+/* Mobile specific adjustments (if needed) */
+@media (max-width: 600px) {
+  .inputGroupWrapper {
+    gap: 4px;
+  }
+  
+  .inputLabel {
+    font-size: 10px !important;
+  }
+}
+
+/* Specific spacing for different input types */
+.inputGroupWrapper.sp {
+  gap: 4px;
+}
+
+.inputGroupWrapper.sp .inputLabel {
+  margin-bottom: 4px;
+}
+
+/* Ensure modal inputs maintain proper layout */
+.inputGroupWrapperWidth.modalInput {
+  width: 100%;
 }

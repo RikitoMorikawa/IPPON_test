@@ -1,0 +1,12 @@
+.barChatButton{
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #3e3e3e;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.active{
+    background: #BFE6EF;
+    color: #0B9DBD;
+}

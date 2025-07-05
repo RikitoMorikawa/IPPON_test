@@ -1,70 +1,83 @@
-.container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-.formContainer{
-    width: 334px;
-    border-radius: 20px;
-    box-shadow: 0px 2px 8px 0px #0000001A;
-    overflow: hidden;
+.formContainer {
+  width: 334px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px 0px #0000001a;
+  overflow: hidden;
 }
-.fieldContainer{
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.formContainer.sp {
+  width: 100%;
+  margin: 0 25px;
 }
-.inputContainer{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.fieldContainer {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.button{
-    background: #0D99FF !important;
-    border-radius: 6px !important;
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.buttonDisable{
-    background: #BBDAF1 !important;
-    color: #F5F5F5 !important;
+.button {
+  background: #0b9dbd !important;
+  border-radius: 6px !important;
 }
-.link{
-    color: #989898 !important;
-    font-size: 12px !important;
-    text-align: center;
-    justify-content: center;
+.buttonDisable {
+  background: #bbdaf1 !important;
+  color: #f5f5f5 !important;
 }
-.logoContainer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.link {
+  color: #989898 !important;
+  font-size: 12px !important;
+  text-align: center;
+  justify-content: center;
+  width: max-content;
+  margin: 0 auto;
+  text-decoration: underline;
+  text-underline-offset: 1.5px;
 }
-
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.successIconContainer {
+  display: flex;
+  justify-content: center;
+  max-width: 50px;
+  margin: 0 auto;
+}
 .intoText {
-    font-size: 12px;
-    font-weight: 700;
-    color: #fff;
-    padding-left: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  padding-left: 7px;
 }
 
-.check_mail_content{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.check_mail_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-.check_mail_title{
-    font-size: 14px;
-    font-weight: 700;
-    color: #3E3E3E;
-    margin: 0;
-    margin-bottom: 8px;
-    line-height: 1.2;
+.check_mail_title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #3e3e3e;
+  margin: 0;
+  margin-bottom: 8px;
+  line-height: 1.2;
 }
 
-.check_mail_text{
-    font-size: 12px;
-    color: #3E3E3E;
-    margin: 0;
+.check_mail_text {
+  font-size: 12px;
+  color: #3e3e3e;
+  margin: 0;
 }

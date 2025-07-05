@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CloseIcon from '@mui/icons-material/Close';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import checkMark from '../../assets/check_circle2.png';
@@ -7,7 +6,9 @@ import deleteIcon from '../../assets/delete.png';
 import errorIcon from '../../assets/error_icon.png';
 import './Toastify.css'
 import { useNavigate } from 'react-router';
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { LinkIcon } from '../../common/icons';
+import { useMediaQuery } from '@mui/material';
+ 
 const Icon = ({ type }:any) => {
   let icon;
 
@@ -34,6 +35,7 @@ const Toast = ({
 }:any) => {
   const [isClosing, setIsClosing] = useState(false);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   const triggerClose = () => {
     setIsClosing(true);
@@ -52,18 +54,18 @@ const Toast = ({
   }, []);
 
   const detailHandler = () => {
-    navigate(`/properties/search_properties/${linkId}`);
+    navigate(`/properties/${linkId}`);
     onClose();
   };
 
   return (
-    <div className={`toastMessage ${isClosing ? 'fade-out':'fade-in'} ${type}`} >
+    <div className={`toastMessage ${isMobile?'sp':''} ${isClosing ? 'fade-out':'fade-in'} ${type}`} >
       <div className={`topLineWrapper ${linkName !==''? 'isLink': ''}`}>
         <div className='messageWrapper'>
           <span style={{ display: 'flex' }}>
             <Icon type={type} />
           </span>
-          <p style={{ fontSize: '16px',margin:'0',fontWeight:'700' }}>
+          <p className={`message ${isMobile?'sp':''}`} style={{ margin:'0',fontWeight:'700' }}>
             {message}
             {secondMessage !== '' && (
               <>
@@ -73,7 +75,7 @@ const Toast = ({
             )}
           </p>
         </div>
-        <button className='closeButton' onClick={onClose}>
+        <button className={`closeButton ${isMobile?'sp':''}`} onClick={onClose}>
           <CloseIcon />
         </button>
       </div>
@@ -81,10 +83,10 @@ const Toast = ({
         <div className='bottomWrapper'>
           <div className='linkName'>
             物件名:
-            <p className='link' onClick={detailHandler}>
+            <p className='linkText' onClick={detailHandler}>
               {linkName}
-              <span style={{ marginLeft: '5px' }}>
-                <OpenInNewIcon/>
+              <span style={{ marginLeft: '5px' }} className='linkIcon'>
+                <LinkIcon/>
               </span>
             </p>
           </div>
@@ -174,4 +176,4 @@ export const useToast = () => {
     ),
   };
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */
+ 

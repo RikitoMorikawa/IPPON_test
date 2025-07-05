@@ -1,4 +1,4 @@
-.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+/* .css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
     padding: 6px 14px !important;
     font-size: 12px !important;
 }
@@ -15,4 +15,9 @@
 }
 .css-1rju2q6-MuiButtonBase-root-MuiMenuItem-root{
     font-size: 12px !important;
+} */
+
+.isShowInColumn {
+  justify-content: flex-start;
+  text-align: left !important;
 }

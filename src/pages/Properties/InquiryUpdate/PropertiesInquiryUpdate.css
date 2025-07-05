@@ -1,0 +1,41 @@
+.historyTitle {
+  display: flex;
+  align-items: center;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  color: #989898;
+  margin-bottom: 20px !important;
+}
+.historyTitle::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #d9d9d9;
+  margin-left: 5px;
+  margin-right: 15px;
+}
+.titleLink {
+  display: inline;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #3e3e3e !important;
+  cursor: pointer;
+  margin: 0 0 20px 0 !important;
+}
+.activeTitle {
+  color: #0b9dbd !important;
+}
+.addIconWrapper {
+  display: flex;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.searchForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 15px 20px 0;
+}

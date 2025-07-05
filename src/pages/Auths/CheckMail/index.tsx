@@ -3,15 +3,15 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
-import { Box, Button } from '@mui/material';
-import Logo from '../../../assets/logo.png';
+import { Box, Button, Typography } from '@mui/material';
+import Logo from '../../../assets/logo.jpg';
 import CustomInput from '../../../components/CustomInput';
 import AuthenticationStatus from '../../../components/AuthenticationStatus';
 import { usernameRules } from '../../../schema/loginSchema';
 import { checkMail } from '../../../store/authSlice';
 import { AppDispatch } from '../../../store';
 import '../Login/Login.css'
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 const CheckMail = () => {
     const [loginStatus, setLoginStatus] = useState('');
 		const [failMessage,setFailMessage] = useState('');
@@ -34,7 +34,7 @@ const CheckMail = () => {
           try {
             const result = await dispatch(checkMail({email}));
             const response = result as any;
-            if (response?.payload?.data?.status===201) {
+            if (response?.payload?.data?.status===200) {
                 navigate('/otp',{replace: true,state: email})
                 setLoginStatus('success');
             } else if(response?.payload?.status===400){
@@ -67,7 +67,7 @@ const CheckMail = () => {
           </Box>
           <Box className='check_mail_content'>
           <p className='check_mail_title'>パスワード再発行</p>
-          <p className='check_mail_text'>ワンタイムパスワードを メールアドレスへ送付します。</p>
+          <Typography sx={{fontSize: {lg: '12px', xs: '11px'}, margin: 0, color: '#3E3E3E'}}>ワンタイムパスワードを メールアドレスへ送付します。</Typography>
           </Box>
           <Box className='inputContainer'>
           <CustomInput placeholder="登録済のメールアドレス"
@@ -77,7 +77,17 @@ const CheckMail = () => {
               error={!!errors.username} 
               rules={usernameRules}/>
           </Box>
-        <Button type="submit" variant="contained" onMouseDown={(e) => e.preventDefault()} className={`button ${!isHasValue ? 'buttonDisable': ''}`} disabled={!isHasValue}>
+        <Button type="submit" 
+          disableElevation variant="contained" 
+          onMouseDown={(e) => e.preventDefault()} 
+          className={`button ${!isHasValue ? 'buttonDisable': ''}`} 
+          disabled={!isHasValue}
+          sx={{
+            '&:disabled': {
+              backgroundColor: '#BFE6EF !important',
+            }
+          }}
+        >
         ワンタイムパスワードの発行
         </Button>
       </Box>
@@ -85,5 +95,5 @@ const CheckMail = () => {
     </Box>
     )
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
+ 
 export default CheckMail

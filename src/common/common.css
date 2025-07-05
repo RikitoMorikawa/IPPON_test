@@ -7,8 +7,24 @@
 .inputGroupWrapperWidth, .radioFormGroup{
     width: 374px;
 }
+.inputGroupWrapperWidth.sp{
+    width: inherit;
+}
+.member.sp .inputGroupWrapperWidth.sp{
+   height: 25px !important;
+   border-radius: 5px;
+   display: flex;
+   align-items: center;
+}
+.MuiDataGrid-columnHeader {
+    background-color: #f5f5f5 !important;
+
+}
 .inputGroupWrapperWidth.modalInput, .radioFormGroup.modalInput{
     width: 377px;
+}
+.inputGroupWrapperWidth.sp.modalInput{
+    width: inherit;
 }
 .inputGroupWrapper.flexCol .inputGroupWrapperWidth.modalInput{
     width: 100%;
@@ -41,4 +57,23 @@
     background: #F5F5F5;
     color: #989898;
     border: 1px solid #D9D9D9;
+}
+
+.customDatePicker .css-1nxbkmn-MuiPickersCalendarHeader-root{
+    display: none !important;
+}
+.customDatePicker .css-1n1xn3x-MuiPickersSlideTransition-root-MuiDayCalendar-slideTransition{
+    min-height: 266px !important;
+}
+
+.customDatePicker .css-5wchs2-MuiDateCalendar-root{
+    height: 300px !important;
+}
+.member.formInputsContainer .modalInputLabel{
+    width: 26% !important;
+}
+.sp.member .modalInputLabel{
+    display: flex;
+    align-items: center;
+    width: 26% !important;
 }

@@ -8,46 +8,77 @@ import FormLabel from '@mui/material/FormLabel';
 import { CustomRadioGroupProps } from '../../types';
 import './CustomRadio.css'
 
-const CustomRadio = styled(Radio)(() => ({
-  '&.MuiButtonBase-root': {
-    position: 'relative',
-    padding: '8px',
-  },
-  '&.Mui-checked': {
-    color: '#D9D9D9',
-    border: 'inherit',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    width: '20px',
-    height: '20px',
-    backgroundColor: '#D9D9D9',
-    border: 'inherit',
-    borderRadius: '50%',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: '3',
-  },
-  '&.Mui-checked::before': {
-    content: '""',
-    position: 'absolute',
-    width: '14px',
-    height: '14px',
-    backgroundColor: '#3F97D5',
-    border: 'inherit',
-    borderRadius: '50%',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
+const IconContainer = styled('span')(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 18,
+  height: 18,
+  [theme.breakpoints.down('sm')]: {
+    width: 14,
+    height: 14,
   },
 }));
 
-const CustomFormControlLabel = styled(FormControlLabel)(() => ({
+const UncheckedIcon = styled('span')(({ theme }) => ({
+  width: 18,
+  height: 18,
+  borderRadius: '50%',
+  backgroundColor: '#D9D9D9',
+  [theme.breakpoints.down('sm')]: {
+    width: 14,
+    height: 14,
+  },
+}));
+
+const CheckedIcon = styled('span')(({ theme }) => ({
+  width: 12,
+  height: 12,
+  borderRadius: '50%',
+  backgroundColor: '#0B9DBD',
+  [theme.breakpoints.down('sm')]: {
+    width: 9,
+    height: 9,
+  },
+}));
+const CustomRadio = (props: any) => {
+  return (
+    <Radio
+      disableRipple
+      color="default"
+      sx={{ padding: {xs:'0px 9px',sm: '0px 10px' } }}
+      checkedIcon={
+        <IconContainer>
+          <UncheckedIcon />
+          <CheckedIcon style={{ position: 'absolute' }} />
+        </IconContainer>
+      }
+      icon={
+        <IconContainer>
+          <UncheckedIcon />
+        </IconContainer>
+      }
+      {...props}
+    />
+  );
+};
+
+const CustomFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   '& .MuiFormControlLabel-label': {
     color: '#3e3e3e',
-    fontSize: '12px',
+    fontSize: '10px',
+     [theme.breakpoints.up('sm')]: {
+      fontSize: '12px',
+    },
+  },
+  '@media (max-width: 600px)': {
+    '&.MuiFormControlLabel-root': {
+      marginLeft: '0',
+    },
+    '& .MuiFormControlLabel-label': {
+      fontSize: '10px',
+      marginLeft: '0'
+    },
   },
 }));
 
@@ -60,10 +91,13 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = ({
   isModal = false,
   onChangeValue,
   disabled=false,
+  labelWidth,
+  labelWidthSp,
+  containerStyle
 }) => {
   return (
-    <FormControl className='radioFormControl'>
-      {label!=='' &&  <FormLabel className='radioFormLabel' >{label}</FormLabel>}
+    <FormControl className='radioFormControl' sx={containerStyle || {width: '100%'}}>
+      {label!=='' &&  <FormLabel className='radioFormLabel' sx={{width: {sm: labelWidth, xs: labelWidthSp}, fontSize: {lg: '12px !important', xs: '10px !important'},}}>{label}</FormLabel>}
       <Controller
         name={name}
         control={control}
@@ -73,7 +107,7 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = ({
           <RadioGroup {...field} className={`radioFormGroup ${isModal? 'modalInput' : ''}`} value={field.value ?? defaultValue}
           onChange={(event) => {field.onChange(event.target.value)
             onChangeValue?.(event.target.value);
-          }}>
+          }} sx={{width: {xs: 'inherit', sm: 'auto'}}}>
             {options.map((option) => (
               <CustomFormControlLabel
                 key={option.value}
@@ -85,6 +119,7 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = ({
             ))}
           </RadioGroup>
         )}}
+        
       />
     </FormControl>
   );

@@ -2,7 +2,10 @@
     height: 34px;
     border-radius: 8px;
   }
-  
+.inquiry.sp .custom-textfield .MuiOutlinedInput-root {
+  height: 25px !important;
+  border-radius: 5px !important;
+}
   .custom-textfield .MuiOutlinedInput-root fieldset {
     border-color: #d9d9d9; 
   }

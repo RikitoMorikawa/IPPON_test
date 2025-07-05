@@ -1,0 +1,395 @@
+.contentForUploadingImage{
+  display: flex;
+  justify-content: start;
+  align-items: flex-start;
+  border: none;
+  background: transparent;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden; /* Prevent horizontal scroll */
+  padding: 0 10px; /* Add padding to prevent edge overflow */
+}
+
+.containerForImageToUpload{
+  align-items: center;
+  border: none;
+  background: transparent;
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  height: auto;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: #f5f5f5;
+  position: relative;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.areaToDropImage{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 10px;
+  gap: 5px; /* Add small gap between elements */
+  border: 1px dashed #0B9DBD;
+  width: 100%; /* Use full width of container */
+  height: 143px;
+  background: transparent;
+  box-sizing: border-box;
+  background: #F7FBFD;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.areaToDropImage.active{
+  border: 2px dashed #0B9DBD;
+  background: #BFE6EF;
+}
+
+.areaToDropImage:hover {
+  border-color: #0B9DBD;
+  background: rgba(191, 230, 239, 0.5);
+}
+
+.sentencesOfDropArea{
+  font-family: 'Noto Sans JP', sans-serif;
+  font-style: normal;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  color: #3E3E3E;
+  font-weight: 700;
+  margin: 0;
+  margin-top: 7px;
+  word-wrap: break-word;
+  max-width: 100%;
+  overflow-wrap: break-word; /* Better text wrapping */
+}
+
+.sentencesOfDropArea.isDragActive{
+  color: #0B9DBD;
+}
+
+.sentencesOfDropAreaSpan{
+  color: #989898;
+  font-weight: 500;
+}
+
+.imageButton{
+  width: 142px;
+  max-width: 100%; /* Prevent overflow */
+  height: 25px;
+  margin-top: 8px; /* Reduce margin to fit better */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid #0B9DBD;
+  border-radius: 11.6px;
+  color: #0B9DBD;
+  box-sizing: border-box;
+  transition: all 0.2s ease; /* Add hover transition */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.imageButton:hover {
+  background-color: #0B9DBD;
+  color: white;
+}
+
+.dragedImage{
+  width: 100%;
+  max-width: 100%;
+  height: 115px;
+  object-fit: cover; /* Changed from contain to cover for better fill */
+  box-sizing: border-box;
+  border-radius: 8px; /* Add slight rounding */
+}
+
+.imageBlock{
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  padding: 12px 4px 4px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.imageTitle{
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  text-align: center;
+  word-break: break-all;
+  color: #3e3e3e;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  margin-bottom: 0; /* Remove bottom margin */
+}
+
+.imageTitleSpan{
+  border-bottom: 1px solid #3e3e3e;
+  display: inline-block; /* Better border display */
+}
+
+.deleteButton{
+  display: block;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid white;
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  background-image: url("data:image/svg+xml;utf8,<svg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M6 7.2L2.4 10.8C2.2 11 1.95 11.1 1.65 11.1C1.35 11.1 1.1 11 0.9 10.8C0.7 10.6 0.6 10.35 0.6 10.05C0.6 9.75 0.7 9.5 0.9 9.3L4.5 5.7L0.9 2.1C0.7 1.9 0.6 1.65 0.6 1.35C0.6 1.05 0.7 0.8 0.9 0.6C1.1 0.4 1.35 0.3 1.65 0.3C1.95 0.3 2.2 0.4 2.4 0.6L6 4.2L9.6 0.6C9.8 0.4 10.05 0.3 10.35 0.3C10.65 0.3 10.9 0.4 11.1 0.6C11.3 0.8 11.4 1.05 11.4 1.35C11.4 1.65 11.3 1.9 11.1 2.1L7.5 5.7L11.1 9.3C11.3 9.5 11.4 9.75 11.4 10.05C11.4 10.35 11.3 10.6 11.1 10.8C10.9 11 10.65 11.1 10.35 11.1C10.05 11.1 9.8 11 9.6 10.8L6 7.2Z' fill='white'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #000;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #333;
+  transform: scale(1.1); /* Slight scale on hover */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.contentForUploadingImage .imageWrapper{
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  max-width: 170px !important;
+  height: 115px !important;
+  box-sizing: border-box !important;
+  background: #f5f5f5 !important;
+  overflow: visible !important;
+  border-radius: 10px !important;
+}
+
+.contentForUploadingImage .imageWrapper.isDragActive {
+  border: 2px solid #0B9DBD !important;
+  background: #BFE6EF !important;
+}
+
+.spanWithBorder{
+  border-bottom: 1px solid #3e3e3e;
+}
+
+/* Enhanced responsive design for better mobile experience */
+@media (max-width: 992px) {
+  .contentForUploadingImage {
+    gap: 15px;
+    padding: 0 8px;
+  }
+}
+
+/* Updated mobile media queries for 3 items per row */
+
+@media (max-width: 768px) {
+  .contentForUploadingImage {
+    gap: 8px;
+    padding: 0 8px;
+    justify-content: flex-start; /* Upload card sticks to items */
+  }
+  
+  .containerForImageToUpload,
+  .imageBlock {
+    width: 110px; /* Reduced from 150px to fit 3 items */
+    min-width: 110px;
+    max-width: 110px;
+    margin-top: 1.5vh;
+    margin-left: 0.2vh;
+  }
+  
+  .contentForUploadingImage .imageWrapper {
+    max-width: 100px !important;
+    height: 100px !important; /* Keep original proportions */
+  }
+  
+  .dragedImage {
+    height: 100px;
+  }
+  
+  .areaToDropImage {
+    height: 120px; /* Keep original height */
+    padding: 15px 8px;
+  }
+  
+  .sentencesOfDropArea {
+    font-size: 5.5px; /* Keep readable size */
+    line-height: 12px;
+  }
+  
+  .imageButton {
+    width: 90px;
+    height: 22px;
+    font-size: 6px;
+    margin-top: 6px;
+  }
+  
+  .imageTitle {
+    font-size: 11px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .contentForUploadingImage {
+    gap: 6px;
+    justify-content: flex-start; /* Upload card sticks to items */
+  }
+  
+  .containerForImageToUpload,
+  .imageBlock {
+    width: 105px;
+    min-width: 105px;
+    max-width: 105px;
+  }
+  
+  .contentForUploadingImage .imageWrapper {
+    max-width: 95px !important;
+    height: 95px !important;
+  }
+  
+  .dragedImage {
+    height: 95px;
+  }
+  
+  .areaToDropImage {
+    height: 110px;
+    padding: 12px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contentForUploadingImage {
+    gap: 5px;
+    justify-content: flex-start; /* Upload card sticks to items */
+    padding: 0 5px;
+  }
+
+  .containerForImageToUpload
+  {
+    margin-top: 1.8vh;
+  }
+  
+  .containerForImageToUpload,
+  .imageBlock {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+  }
+  
+  .contentForUploadingImage .imageWrapper {
+    max-width: 90px !important;
+    height: 90px !important;
+  }
+  
+  .dragedImage {
+    height: 90px;
+  }
+  
+  .areaToDropImage {
+    height: 100px;
+    padding: 10px 6px;
+    gap: 3px;
+  }
+  
+  .sentencesOfDropArea {
+    font-size: 5.5px;
+    line-height: 11px;
+    margin-top: 4px;
+  }
+  
+  .imageButton {
+    width: 80px;
+    height: 20px;
+    font-size: 5.5px;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .imageTitle {
+    font-size: 10px;
+    line-height: 14px;
+    margin-top: 3px;
+  }
+  
+  .deleteButton {
+    width: 20px;
+    height: 20px;
+    top: -8px;
+    right: -8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .contentForUploadingImage {
+    gap: 4px;
+    padding: 0 3px;
+    justify-content: flex-start; /* Upload card sticks to items */
+  }
+  
+  .containerForImageToUpload,
+  .imageBlock {
+    width: 95px;
+    min-width: 95px;
+    max-width: 95px;
+  }
+  
+  .contentForUploadingImage .imageWrapper {
+    max-width: 85px !important;
+    height: 85px !important;
+  }
+  
+  .dragedImage {
+    height: 85px;
+  }
+  
+  .areaToDropImage {
+    height: 90px;
+    padding: 8px 4px;
+  }
+  
+  .sentencesOfDropArea {
+    font-size: 5.5px;
+    line-height: 10px;
+  }
+  
+  .imageButton {
+    width: 75px;
+    height: 18px;
+    font-size: 5.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .imageTitle {
+    font-size: 9px;
+    line-height: 12px;
+  }
+}

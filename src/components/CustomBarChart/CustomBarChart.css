@@ -1,0 +1,15 @@
+.MuiChartsBar-root:hover {
+    fill: #0B9DBD !important;
+    opacity: 1 !important;
+  }
+.MuiChartsAxis-tick {
+    stroke: inherit !important;
+  }
+.MuiChartsAxis-tickLabel {
+    fill: #989898 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+  }
+.MuiChartsAxis-label {
+    fill: #989898 !important;
+  }

@@ -79,11 +79,11 @@ export const SContentForUploadingImage = styled.div`
   border-radius: 15.63px;
 }
 
-.sImage{
+/* .sImage{
   width: 237px;
   height: 237px;
   object-fit: contain;
-}
+} */
 
 .imageBlock{
   position: relative;
@@ -124,7 +124,7 @@ export const SContentForUploadingImage = styled.div`
   border-radius: 50%;
 }
 
-.imageWrapper{
+/* .imageWrapper{
   position: relative;
   border-radius: 10px;
   background: transpalent;
@@ -132,7 +132,7 @@ export const SContentForUploadingImage = styled.div`
   height: 237px;
   box-sizing: border-box;
   background: #BFE6EF;
-}
+} */
 
 .spanWithBorder{
   border-bottom: 1px solid #3e3e3e;
@@ -144,4 +144,67 @@ export const SContentForUploadingImage = styled.div`
   right: 11px;
   pointer-events: all;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  border: 1px solid #000;
+  border-radius: 50%;
+  width: 24px;
+  padding: 5px;
+  height: 24px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.deleteIcon:hover {
+  background-color: #000;
+  color: #000;
+}
+
+.loading-spinner-container {
+  position: relative;
+  width: 237px;
+  height: 237px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+/* Update your existing CSS to make sure the image container has the same dimensions */
+.imageWrapper {
+  position: relative;
+  border-radius: 10px;
+  background: transparent;
+  width: 237px;
+  height: 237px;
+  box-sizing: border-box;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Optional: Add a fade-in animation for smooth transitions */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sImage {
+  width: 237px;
+  height: 237px;
+  object-fit: contain;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Make sure the loading state doesn't overlap with the delete icon */
+.imageBlock {
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 5px;
 }

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import ipponApi from '../config/axios';
 import { MembersType } from '../types';
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 const BaseURL = import.meta.env.VITE_API_URL;
 
 export const searchMembers = createAsyncThunk<any, any>(
@@ -63,7 +63,6 @@ export const updateDetailedMember = createAsyncThunk<any, any>(
   'members/updateDetailedMember',
   async ({id,payload},{ rejectWithValue }) => {
     try {
-      console.log("Payload ", payload)
       const result = await ipponApi.put(`${BaseURL}/api/members/${id}`,{...payload});
       return result.data.data;
     } catch (error:any) {
@@ -124,9 +123,8 @@ export const sendEmail = createAsyncThunk<any, any>(
   'members/sendMail',
   async (payload,{ rejectWithValue }) => {
     try {
-      const result = await ipponApi.post(`${BaseURL}/api/auth/member/sent-email`,
+      const result = await ipponApi.post(`${BaseURL}/api/v1/auth/sent-email`,
         {email:payload});
-      console.log("Change password mail result ", result.data)
       return result.data;
     } catch (error:any) {
       return rejectWithValue(
@@ -219,5 +217,5 @@ export const membersSlice = createSlice({
     });
   },
 });
-/* eslint-enable @typescript-eslint/no-explicit-any */
+ 
 export default membersSlice.reducer;

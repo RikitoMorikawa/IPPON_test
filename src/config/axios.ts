@@ -1,19 +1,19 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from "axios";
+import Cookies from "js-cookie";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ipponApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-function isOngoingMaintenance(status:any) {
+function isOngoingMaintenance(status: any) {
   if (status === 401) {
-    window.location.href = '/login';
+    window.location.href = "/login";
   }
 }
 
 ipponApi.interceptors.request.use(
   (config) => {
-    const token = Cookies.get('token');
+    const token = Cookies.get("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -24,7 +24,7 @@ ipponApi.interceptors.request.use(
     isOngoingMaintenance(error.response?.status);
 
     return Promise.reject(error);
-  },
+  }
 );
 
 ipponApi.interceptors.response.use(
@@ -37,7 +37,7 @@ ipponApi.interceptors.response.use(
     isOngoingMaintenance(error.response?.status);
 
     return Promise.reject(error);
-  },
+  }
 );
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export default ipponApi;

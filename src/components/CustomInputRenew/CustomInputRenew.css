@@ -1,0 +1,57 @@
+.formControl {
+  width: 100%;
+  max-width: 25ch;
+}
+.otp .formControl {
+  max-width: inherit;
+}
+.formControl.sp {
+  max-width: inherit;
+}
+.formControl .MuiOutlinedInput-root {
+  border-radius: 6px;
+  height: 36px;
+  font-size: 12px;
+  width: 294px;
+}
+.formControl.sp .MuiOutlinedInput-root {
+  width: 100%;
+}
+.formControl .MuiOutlinedInput-root fieldset {
+  border-color: #989898;
+}
+
+.formControl .MuiOutlinedInput-root:hover fieldset {
+  border-color: #0b9dbd;
+}
+
+.formControl .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #0b9dbd;
+}
+
+.formControl .MuiInputBase-input {
+  color: #3e3e3e;
+  padding: 10px;
+  width: 294px;
+}
+
+.formControlError .MuiOutlinedInput-root fieldset {
+  border-color: #da384c !important;
+}
+
+.formControlHelperText {
+  margin-bottom: 8px !important;
+  margin-left: 0 !important;
+}
+
+.formControlHelperTextError {
+  color: #da384c !important;
+}
+
+.formControlHelperTextNormal {
+  color: #989898 !important;
+}
+
+.formControlHelperText.focus {
+  color: #0b9dbd !important;
+}

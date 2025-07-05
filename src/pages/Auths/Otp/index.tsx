@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { Box, Button } from '@mui/material';
 import { InputAdornment } from '@mui/material';
 import ReplayIcon from '@mui/icons-material/Replay';
-import Logo from '../../../assets/logo.png';
+import Logo from '../../../assets/logo.jpg';
 import AuthenticationStatus from '../../../components/AuthenticationStatus';
 import { otpRules } from '../../../schema/loginSchema';
 import CustomInput from '../../../components/CustomInput';
@@ -115,17 +115,27 @@ const Otp = () => {
               endAdornment={
                   <InputAdornment position="end">
                     {isResendVisible ? (
-                      <Button type='button' onClick={(e)=>handleResendOTP(e)} variant="text" sx={{background: 'inherit',position:'absolute',right:'0',color:'#0D99FF',fontSize: '12px'}}>
+                      <Button type='button' onClick={(e)=>handleResendOTP(e)} variant="text" sx={{background: 'inherit',position:'absolute',right:'0',color:'#0B9DBD',fontSize: '12px'}}>
                         <ReplayIcon sx={{ fontSize: '16px' }}/>恨む
                       </Button>
                     ) : (
-                      <p style={{color:'#0D99FF'}}>
+                      <p style={{color:'#0B9DBD'}}>
                       {timer} 秒</p>
                     )}
                   </InputAdornment>
               }/>
           </Box>
-        <Button type="submit" variant="contained" onMouseDown={(e) => {e.preventDefault()}} className={`button ${!isHasValue ? 'buttonDisable': ''}`} disabled={!isHasValue}>
+        <Button type="submit" 
+          disableElevation variant="contained" 
+          onMouseDown={(e) => {e.preventDefault()}} 
+          className={`button ${!isHasValue ? 'buttonDisable': ''}`} 
+          disabled={!isHasValue}
+          sx={{
+            '&:disabled': {
+              backgroundColor: '#BFE6EF !important',
+            }
+          }}
+        >
             確認
         </Button>
       </Box>

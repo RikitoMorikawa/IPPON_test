@@ -19,7 +19,7 @@ import { formatDateTime } from "../../../common/formatDate";
 import CreateMember from "../Create";
 import { ButtonDeleteIcon } from "../../../common/icons";
 import { useNavigate } from "react-router";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 const MembersListing = () => {
   const [selectedIds, setSelectedIds] = useState<any[]>([]);
@@ -36,15 +36,11 @@ const MembersListing = () => {
   const {register, handleSubmit} = useForm();
   const clientId = Cookies.get('clientID')
   const role = Cookies.get('role')
-  const { data: membersData } = useSelector(
+  const { data: membersData, loading: isSearchLoading } = useSelector(
     (state: any) => state.members.searched,
   );
   const [members,setMembers] = useState<any>([]);
   const [changeFlag, setChangeFlag]= useState(false);
-
-  console.log(membersData);
-  console.log(members);
-  
 
   const handleRowSelection = (selectedRows: any[]) => {
     setSelectedIds(selectedRows);
@@ -114,6 +110,7 @@ const MembersListing = () => {
 
   useEffect(() => {
     fetchMembers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams,changeFlag,deleteFlag]);
 
   const createMemberSuccessHandler =()=>{
@@ -123,7 +120,6 @@ const MembersListing = () => {
   // const updateAdminStatus = async({member_id,email,newStatus}:any) => {
   //   try {
   //     const updateResult = await dispatch(changeAdminStatus({member_id,email,newStatus}));
-  //     console.log("updateResult", updateResult);
   //     const result = await updateResult.payload as any;
   //       if (result.message){
   //         addToast({
@@ -223,10 +219,17 @@ const MembersListing = () => {
         }  
       </Stack>
       <CreateMember openModal={openModal} setOpenModal={setOpenModal} onCreateSuccess={createMemberSuccessHandler}/>
-      <Table rows={members} columns={columns} onRowSelection={handleRowSelection} selectedIds={selectedIds} />
+      <Table 
+        isLoading={isSearchLoading}
+        rows={members} 
+        columns={columns} 
+        checkbox={true} 
+        onRowSelection={handleRowSelection} 
+        selectedIds={selectedIds} 
+      />
       {toasts}
     </Box>
   );
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */
+ 
 export default MembersListing;

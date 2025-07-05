@@ -21,31 +21,61 @@ const CustomTwoColInputGroup: React.FC<CustomTwoColInputGroupProps> = ({
   disabled = false,
   isRequired = false,
   isModalInput = false,
+  index,
+  // labelWidth,
+  // labelWidthSp,
+  inputWidth,
+  inputWidthSp,
+  onRemove,
+  validationMessageFirstName,
+  validationMessageLastName
 }) => {
+  const fieldIndex = typeof index === 'undefined' ? 0 : index;
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
+        display: 'block',
         marginBottom: marginBottom,
+        width: {xs: '100%', sm: 'inherit'},
       }}
     >
-      <Typography align="right" fontSize={12} paddingBottom={errors[firstName] || errors[lastName]? '24px' : ''} marginRight="20px" color="#3E3E3E" fontWeight={700} sx={{display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'}}>
-        {label}{isRequired&& <span style={{display:'flex'}}><RequireIcon/></span>}
+      <Typography 
+        fontSize={12} 
+        className='modalInputLabel' 
+        color="#3E3E3E" 
+        fontWeight={700} 
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: "100%", // Take full width
+          marginBottom: 1, // Add spacing between label and input
+          fontSize: {lg: '12px !important', xs: '10px !important'},
+        }}
+      >
+        {label}{isRequired && fieldIndex===0 &&<span style={{display:'flex'}}><RequireIcon/></span>}
       </Typography>
-      <CustomTwoColInput
-        firstName={firstName}
-        lastName={lastName}
-        placeholderOne={placeholderOne}
-        placeholderTwo={placeholderTwo}
-        register={register}
-        errors={errors}
-        disabled={disabled}
-        isModalInput={isModalInput}
-      />
+      
+      <Box
+        sx={{
+          width: {sm: inputWidth, xs: inputWidthSp}
+        }}
+      > 
+        <CustomTwoColInput
+          firstName={index !== undefined ? `nearest_stations.${index}.line_name` : firstName}
+          lastName={index !== undefined ? `nearest_stations.${index}.station_name` : lastName}
+          placeholderOne={placeholderOne}
+          placeholderTwo={placeholderTwo}
+          register={register}
+          errors={errors}
+          disabled={disabled}
+          isModalInput={isModalInput}
+          isRequired={isRequired}
+          index={index}
+          onRemove={onRemove}
+          validationMessageFirstName={validationMessageFirstName ?? ''}
+          validationMessageLastName={validationMessageLastName ?? ''}
+        />
+      </Box>
     </Box>
   );
 };

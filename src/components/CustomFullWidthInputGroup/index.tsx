@@ -1,12 +1,16 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, InputAdornment, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { CustomFullWidthInputGroupProps } from "../../types";
 import CustomTextField from "../CustomTextField";
 import { CustomTextAreaField } from "../CustomTextField";
-import { RequireIcon } from "../CustomTwoColInputGroup";
 import '../../common/common.css'
 import './CustomFullWidthInputGroup.css'
+import { DateRangeCalendarIcon, RequireIcon } from "../../common/icons";
 
+// Note: Add these props to your CustomFullWidthInputGroupProps interface:
+// inputWidth?: string | number;
+// inputWidthSp?: string | number;
+ 
 const CustomFullWidthInputGroup: React.FC<CustomFullWidthInputGroupProps> = ({
   label,
   name,
@@ -15,22 +19,37 @@ const CustomFullWidthInputGroup: React.FC<CustomFullWidthInputGroupProps> = ({
   errors,
   disabled=false,
   isRequired = false,
-  isModalInput = false,
+  // isModalInput = false,
   type = 'text',
-  extraClassName = 'flexRow',
+  // isShowInColumn = false,
+  // extraClassName = 'flexRow',
   rows,
   multiline = false,
   min,
   max,
   minMessage,
   maxMessage,
+  labelWidth,
+  labelWidthSp,
+  inputWidth,
+  inputWidthSp,
+  labelSx= {},
+  showYen = false,
+  showMeter = false, 
+  showYearIcon = false,
+  showCalendarIcon,
+  onCalendarClick,
+  children,
 }) => {
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // true for xs
 
   const getValidationRules = () => {
     const rules: any = {};
     
     if (isRequired) {
-      rules.required = `${label} is required`;
+      rules.required = `${label}は必須です。`;
     }
     
     if (type === 'number' && (min !== undefined || max !== undefined)) {
@@ -38,7 +57,7 @@ const CustomFullWidthInputGroup: React.FC<CustomFullWidthInputGroupProps> = ({
       rules.validate = {
         digitsCheck: (value: string) => {
           // Remove any negative sign and decimal point for digit counting
-          const numStr = value.toString().replace(/[-\.]/g, '');
+          const numStr = value.toString().replace(/[-.]/g, '');
           
           if (min !== undefined && numStr.length < min) {
             return minMessage || `Number must have at least ${min} digit(s)`;
@@ -50,6 +69,20 @@ const CustomFullWidthInputGroup: React.FC<CustomFullWidthInputGroupProps> = ({
           
           return true;
         }
+      };
+    }
+    
+    if (type === 'email') {
+      rules.pattern = {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: '有効なメールアドレスを入力してください。',
+      };
+    }
+  
+    if (type === 'phoneNumber') {
+      rules.pattern = {
+        value: /^\d{10,11}$/,
+        message: 'Phone番号は10桁または11桁の数字である必要があります。',
       };
     }
     
@@ -86,12 +119,29 @@ const CustomFullWidthInputGroup: React.FC<CustomFullWidthInputGroupProps> = ({
     return {};
   };
 
+  // Always use column layout (label on top, input below)
+  const getResponsiveClass = () => {
+    return 'flexCol';
+  };
+
   return (
-     <Box className={`inputGroupWrapper ${extraClassName}`}>
-      <Typography className={`inputLabel`}  paddingBottom={errors[name]&&extraClassName!=='flexCol' ? '24px' : extraClassName==='flexCol'? '10px' : ''} >
+     <Box className={`inputGroupWrapper ${getResponsiveClass()} ${isMobile?'sp':''} ${multiline&&'multiline'} ${showCalendarIcon?'hasCalendar':''}`} sx={{display: 'flex !important', flexDirection: 'column !important'}}>
+      <Typography className={`inputLabel ${isMobile?'sp':''} ${multiline&&'multiline'}`} sx={{
+          width: {lg: labelWidth, xs: labelWidthSp || '100%'}, // Use labelWidth and labelWidthSp props
+          ...labelSx,
+          fontSize: {lg: '12px !important', xs: '10px !important'},
+          alignSelf: 'flex-start', // Always align to start for column layout
+          paddingTop: multiline ? '8px' : '0',
+          paddingBottom: '4px', // Consistent spacing
+          marginBottom: '4px', // Consistent margin
+          textAlign: 'left', // Ensure label text is left-aligned
+          justifyContent: 'flex-start', // Ensure content is aligned to the left
+        }} >
         {label}{isRequired&& <span style={{display:'flex'}}><RequireIcon/></span>}
       </Typography>
-      <Box className={`inputGroupWrapperWidth ${isModalInput? 'modalInput' : ''}`}>
+      <Box sx={{
+        width: {sm: inputWidth, xs: inputWidthSp}
+      }}>
         {multiline ? <CustomTextAreaField
                       fullWidth
                       type={type}
@@ -115,12 +165,33 @@ const CustomFullWidthInputGroup: React.FC<CustomFullWidthInputGroupProps> = ({
                         inputProps={{
                           inputMode: 'numeric',
                         }}
+                        InputProps={{
+                          endAdornment: showYen ? (
+                            <InputAdornment position="end"><Typography sx={{ fontSize: '12px', color: '#3e3e3e' }}>
+                            円
+                          </Typography></InputAdornment>
+                          ) : showMeter ? (
+                            <InputAdornment position="end"><Typography sx={{ fontSize: '12px', color: '#3e3e3e' }}>
+                            ㎡
+                          </Typography></InputAdornment>
+                          ) : showCalendarIcon ? (
+                            <InputAdornment position="end">
+                              <IconButton onClick={onCalendarClick} sx={{padding: '0'}}>
+                                <DateRangeCalendarIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ): showYearIcon ? (
+                            <InputAdornment position="end"><Typography sx={{ fontSize: '12px', color: '#3e3e3e' }}>
+                            年
+                          </Typography></InputAdornment>
+                          ) :null,
+                        }}
                         sx={getInputStyles()}
                       />
-        }
-        </Box>
+        }{children&&children}
+      </Box> 
     </Box>
   );
 };
-
+ 
 export default CustomFullWidthInputGroup;

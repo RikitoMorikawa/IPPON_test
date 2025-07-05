@@ -10,7 +10,15 @@ const SectionTitle:React.FC<TitleProps> = ({title,addBorder=true}) => {
         fontWeight='bold'
         fontSize={"16px"}
         lineHeight={"20px"}
-        borderLeft={"7px solid #3F97D5"}
+        position={"relative"}
+        sx={{
+          fontSize: {
+            xs: '14px',   // small screens
+            sm: '14px',   // tablets
+            md: '16px',   // desktops
+          },
+          borderLeft: {xs: '6px solid #0B9DBD', sm: '7px solid #0B9DBD'}
+        }}
         pl={1.25}
         mb={1}>
         {title}
