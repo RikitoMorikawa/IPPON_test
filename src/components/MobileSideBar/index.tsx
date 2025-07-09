@@ -14,7 +14,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout, setRedirectPath } from "../../store/authSlice";
 import { AppDispatch } from "../../store";
@@ -54,21 +54,6 @@ const styled = {
       },
     },
   },
-  mobileListItemActive: {
-    backgroundColor: "#DBF8FF",
-    borderRadius: "12px",
-    margin: "6px 12px",
-    padding: "8px",
-    minHeight: "auto",
-    "& > .MuiListItemIcon-root, & > .MuiListItemText-root span": {
-      color: "#0e9dbc",
-      fontSize: "12px",
-      fontWeight: "600",
-    },
-    "&:hover": {
-      backgroundColor: "#DBF8FF",
-    },
-  },
   mobileDropdownMenu: {
     margin: "0 12px",
     padding: 0,
@@ -89,13 +74,29 @@ const styled = {
   mobileDropdownMenuItem: {
     padding: "6px 12px",
     backgroundColor: "transparent",
+    borderRadius: 2,
+    ml: 2,
+    mt: 0.3,
     "& .MuiListItemText-root span": {
       color: "#354053",
       fontSize: "10px !important",
       lineHeight: "1.2",
     },
+    "& .MuiListItemText-primary": {
+      fontSize: "10px !important",
+      lineHeight: "1.2",
+    },
     "&:hover": {
-      backgroundColor: "#F5F5F5",
+      backgroundColor: "#DBF8FF",
+      "& .MuiListItemText-root span": {
+        color: "#0e9dbc",
+        fontWeight: 600,
+        fontSize: "10px !important",
+      },
+      "& .MuiListItemText-primary": {
+        fontWeight: 600,
+        fontSize: "10px !important",
+      },
     },
   },
   mobileDropdownMenuItemActive: {
@@ -105,8 +106,14 @@ const styled = {
     margin: "2px 4px",
     "& .MuiListItemText-root span": {
       color: "#0e9dbc",
-      fontSize: "10px",
+      fontSize: "10px !important",
       fontWeight: "600",
+      lineHeight: "1.2",
+    },
+    "& .MuiListItemText-primary": {
+      color: "#0e9dbc",
+      fontWeight: "600",
+      fontSize: "10px !important",
       lineHeight: "1.2",
     },
     "&:hover": {
@@ -135,7 +142,6 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const clientName = Cookies.get("clientName");
 
-  // Menu structure with dropdowns
   const sidebarMenus = [
     {
       id: "inquiry",
@@ -166,7 +172,7 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
     },
     {
       id: "property",
-      label: "物件検索",
+      label: "物件情報",
       icon: (
         <svg
           width="20"
@@ -216,58 +222,41 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
       icon: <LogoutIcon />,
       subItems: [],
       hasDropdown: false,
-      action: "logout", // Special action identifier
+      action: "logout",
     },
   ];
 
-  // Close sidebar on route change
-  useEffect(() => {
-    if (open) {
-      onClose();
-    }
-  }, [location.pathname]);
-
-  // Handle logout action
   const handleLogout = () => {
-    // Save current location before logout
     dispatch(setRedirectPath(location.pathname + location.search));
-    // Dispatch logout action to clear all auth state and cookies
     dispatch(logout());
     navigate("/login");
     onClose();
   };
 
-  // Toggle dropdown open/closed
-  const handleDropdownToggle = (dropdownId: string) => {
-    const selectedMenu = sidebarMenus.find((menu) => menu.id === dropdownId);
-
-    // Handle logout action
-    if (selectedMenu?.action === "logout") {
+  const handleMenuItemClick = (menu: any) => {
+    if (menu.action === "logout") {
       handleLogout();
       return;
     }
-
-    // Handle dropdown menus
-    if (!selectedMenu?.hasDropdown) return;
-
-    const isCurrentlyOpen =
-      openDropdown === dropdownId ||
-      (selectedMenu && isDropdownActive(selectedMenu.subItems));
-
-    if (isCurrentlyOpen) {
-      if (openDropdown === dropdownId) {
-        setOpenDropdown(null);
-      }
-    } else {
-      setOpenDropdown(dropdownId);
-      const firstLink = selectedMenu.subItems?.[0]?.to;
-      if (firstLink) {
-        navigate(firstLink);
-      }
+    // アコーディオンがある場合は開閉処理
+    if (menu.hasDropdown) {
+      handleDropdownToggle(menu.id);
     }
   };
 
-  // Check if current path is in a dropdown's subitems
+  const handleDropdownToggle = (dropdownId: string) => {
+    if (openDropdown === dropdownId) {
+      setOpenDropdown(null);
+    } else {
+      setOpenDropdown(dropdownId);
+    }
+  };
+
+  const handleSubMenuItemClick = (path: string) => {
+    navigate(path);
+    onClose();
+  };
+
   const isDropdownActive = (dropdownItems: { to: string }[]) => {
     return dropdownItems.some(
       (item) =>
@@ -277,11 +266,6 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
     );
   };
 
-  const handleMenuItemClick = (path: string) => {
-    navigate(path);
-    onClose();
-  };
-
   return (
     <Drawer
       anchor="left"
@@ -289,15 +273,15 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
       onClose={onClose}
       sx={styled.mobileDrawer}
       ModalProps={{
-        keepMounted: true, // Better mobile performance
+        keepMounted: true,
       }}
     >
       <Box sx={{ height: "100%", overflow: "auto", mt: 1 }}>
-        {/* Header with logo and close button */}
+        {/* Header */}
         <Box
           sx={{
             ...styled.mobileHeader,
-            justifyContent: "center", // Override the space-between
+            justifyContent: "center",
           }}
         >
           <Stack
@@ -305,13 +289,6 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
             alignItems={"center"}
             sx={{ cursor: "pointer", minWidth: "91px" }}
           >
-            {/* <IconButton sx={{ p: 0, mr: 0.6 }}>
-            <Avatar
-                alt='Remy Sharp'
-                src={profileImg}
-                sx={{ width: 25, height: 25 }}
-            />
-            </IconButton> */}
             <Box>
               <Typography
                 variant="body2"
@@ -359,11 +336,27 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
             <div key={menu.id}>
               <ListItemButton
                 disableRipple
-                onClick={() => handleDropdownToggle(menu.id)}
+                onClick={() => handleMenuItemClick(menu)}
                 sx={{
-                  ...(menu.hasDropdown && isDropdownActive(menu.subItems)
-                    ? styled.mobileListItemActive
-                    : styled.mobileListItem),
+                  ...styled.mobileListItem,
+                  margin: "6px 12px",
+                  // hover時のみ背景色を適用、通常時は透明
+                  backgroundColor: "transparent",
+                  "&:hover": {
+                    backgroundColor: "#DBF8FF",
+                    "& .MuiListItemIcon-root": {
+                      color: "#0e9dbc !important",
+                      "& svg": {
+                        color: "#0e9dbc !important",
+                      },
+                    },
+                    "& .MuiListItemText-root .MuiListItemText-primary": {
+                      color: "#0e9dbc !important",
+                    },
+                    "& .MuiSvgIcon-root": {
+                      color: "#0e9dbc !important",
+                    },
+                  },
                 }}
               >
                 <ListItemIcon
@@ -371,13 +364,15 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
                     minWidth: "20px",
                     paddingY: "4px",
                     paddingX: "4px",
-                    color:
-                      menu.hasDropdown && isDropdownActive(menu.subItems)
-                        ? "#0e9dbc"
-                        : "#354053",
+                    color: isDropdownActive(menu.subItems)
+                      ? "#0e9dbc !important"
+                      : "#354053",
                     "& svg": {
                       width: "14px",
                       height: "14px",
+                      color: isDropdownActive(menu.subItems)
+                        ? "#0e9dbc !important"
+                        : "inherit",
                     },
                   }}
                 >
@@ -388,15 +383,17 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
                   sx={{
                     margin: 0,
                     "& .MuiListItemText-primary": {
-                      fontWeight:
-                        menu.hasDropdown && isDropdownActive(menu.subItems)
-                          ? 600
-                          : 500,
+                      fontWeight: isDropdownActive(menu.subItems)
+                        ? "600 !important"
+                        : 500,
                       fontSize: "11px",
                       lineHeight: 1.2,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
+                      color: isDropdownActive(menu.subItems)
+                        ? "#0e9dbc !important"
+                        : "#354053",
                     },
                   }}
                 />
@@ -407,7 +404,7 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
                       <KeyboardArrowUp
                         sx={{
                           color: isDropdownActive(menu.subItems)
-                            ? "#0e9dbc"
+                            ? "#0e9dbc !important"
                             : "#354053",
                           fontSize: "16px",
                           marginLeft: "auto",
@@ -418,7 +415,7 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
                       <KeyboardArrowDown
                         sx={{
                           color: isDropdownActive(menu.subItems)
-                            ? "#0e9dbc"
+                            ? "#0e9dbc !important"
                             : "#354053",
                           fontSize: "16px",
                           marginLeft: "auto",
@@ -447,24 +444,45 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
                       <ListItemButton
                         key={item.to}
                         disableRipple
-                        onClick={() => handleMenuItemClick(item.to)}
+                        onClick={() => handleSubMenuItemClick(item.to)}
                         sx={{
-                          ...(location.pathname === item.to
-                            ? styled.mobileDropdownMenuItemActive
-                            : styled.mobileDropdownMenuItem),
+                          ...styled.mobileDropdownMenuItem,
+                          borderRadius: 2,
+                          ml: 2,
+                          mt: 0.3,
                           backgroundColor:
                             location.pathname === item.to
                               ? "#DBF8FF"
                               : "transparent",
-                          borderRadius: 2,
-                          ml: 2,
-                          mt: 0.3,
+                          "&:hover": {
+                            backgroundColor: "#DBF8FF",
+                          },
                         }}
                       >
                         <ListItemText
                           primary={item.label}
+                          primaryTypographyProps={{
+                            fontSize: "10px",
+                            lineHeight: 1.2,
+                            fontWeight:
+                              location.pathname === item.to ? 600 : 400,
+                            color:
+                              location.pathname === item.to
+                                ? "#0e9dbc"
+                                : "#354053",
+                          }}
                           sx={{
                             "& .MuiListItemText-primary": {
+                              fontSize: "10px !important",
+                              fontWeight:
+                                location.pathname === item.to
+                                  ? "600 !important"
+                                  : 400,
+                              color:
+                                location.pathname === item.to
+                                  ? "#0e9dbc !important"
+                                  : "#354053 !important",
+                              lineHeight: 1.2,
                               whiteSpace: "nowrap",
                               overflow: "hidden",
                               textOverflow: "ellipsis",

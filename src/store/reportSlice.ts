@@ -47,11 +47,11 @@ export const createReport = createAsyncThunk<any, any>(
   async (payload, { rejectWithValue }) => {
     try {
       // Extract property_id from payload
-      const { property_id, report_route_name, save_type } = payload;
+      const { property_id, save_type } = payload;
 
-      // Use property_id in the URL
+      // Use unified endpoint
       const result = await ipponApi.post(
-        `${BaseURL}/api/v1/properties/${property_id}/reports/${report_route_name}/save`,
+        `${BaseURL}/api/v1/properties/${property_id}/reports/save`,
         payload,
         // Configure request based on save_type
         save_type === "completed" ? { responseType: "blob" as const } : {}
@@ -162,54 +162,111 @@ export const deleteReport = createAsyncThunk<any, any>(
   }
 );
 
-export const generateReportWithAI = createAsyncThunk<any, any>(
-  "reports/generateWithAI",
+export const fetchInquiriesForReport = createAsyncThunk<any, any>(
+  "reports/fetchInquiriesForReport",
   async (
     payload: {
       property_id: string;
-      client_id: string;
-      property_name: string;
-      report_start_date: string;
-      report_end_date: string;
+      start_date: string;
+      end_date: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const queryParams = new URLSearchParams({
+        start_date: payload.start_date,
+        end_date: payload.end_date,
+      });
+      
+      const response = await ipponApi.get(
+        `${BaseURL}/api/v1/properties/${payload.property_id}/inquiry?${queryParams.toString()}`
+      );
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data ||
+          "An error occurred during fetching inquiries for report"
+      );
+    }
+  }
+);
+
+export const setupReportBatch = createAsyncThunk<any, any>(
+  "reports/setupReportBatch",
+  async (
+    payload: {
+      property_id: string;
+      start_date: string;
+      auto_create_period: string;
+      auto_generate: boolean;
     },
     { rejectWithValue }
   ) => {
     try {
       const response = await ipponApi.post(
-        `${BaseURL}/api/v1/properties/${payload.property_id}/reports`,
+        `${BaseURL}/api/v1/properties/${payload.property_id}/reports/batch`,
         {
-          client_id: payload.client_id,
-          property_id: payload.property_id,
-          property_name: payload.property_name,
-          report_start_date: payload.report_start_date,
-          report_end_date: payload.report_end_date,
-          customer_interactions: [
-            {
-              customer_id: "TEST_CUSTOMER_001",
-              customer_name: "テスト顧客 太郎",
-              inquired_at: "2024-01-15 14:30:00",
-              category: "内見",
-              type: "物件見学",
-              summary:
-                "物件の内見希望。設備や周辺環境について質問がありました。",
-            },
-            {
-              customer_id: "TEST_CUSTOMER_002",
-              customer_name: "テスト顧客 花子",
-              inquired_at: "2024-01-16 10:00:00",
-              category: "電話",
-              type: "資料請求",
-              summary:
-                "物件の詳細資料を希望。価格や契約条件について確認したい。",
-            },
-          ],
+          start_date: payload.start_date,
+          auto_create_period: payload.auto_create_period,
+          auto_generate: payload.auto_generate,
         }
       );
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data ||
-          "An error occurred during generating report with AI"
+          "An error occurred during setting up report batch"
+      );
+    }
+  }
+);
+
+export const fetchBatchStatus = createAsyncThunk<any, any>(
+  "reports/fetchBatchStatus",
+  async (
+    payload: {
+      property_id: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await ipponApi.get(
+        `${BaseURL}/api/v1/properties/batch-status?property_id=${payload.property_id}`
+      );
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data ||
+          "An error occurred during fetching batch status"
+      );
+    }
+  }
+);
+
+export const updateBatchStatus = createAsyncThunk<any, any>(
+  "reports/updateBatchStatus",
+  async (
+    payload: {
+      batch_id: string;
+      start_date?: string;
+      auto_create_period?: string;
+      auto_generate: boolean;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      // batch_idをURLパラメータに使用し、リクエストボディには含めない
+      const { batch_id, ...bodyPayload } = payload;
+      
+      const response = await ipponApi.put(
+        `${BaseURL}/api/v1/properties/batch-status/${batch_id}`,
+        bodyPayload
+      );
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data ||
+          "An error occurred during updating batch status"
       );
     }
   }
@@ -228,6 +285,11 @@ const initialState: ReportsType = {
   },
   detailed: {
     data: {},
+    loading: false,
+    error: false,
+  },
+  batchStatus: {
+    data: null,
     loading: false,
     error: false,
   },
@@ -314,6 +376,59 @@ export const reportsSlice = createSlice({
     builder.addCase(fetchPropertyReports.rejected, (state) => {
       state.searched.loading = false;
       state.searched.error = true;
+    });
+    // fetchInquiriesForReport handlers
+    builder.addCase(fetchInquiriesForReport.fulfilled, (state,_action) => {
+      // Store inquiry data in a separate state if needed
+      state.new.loading = false;
+    });
+    builder.addCase(fetchInquiriesForReport.pending, (state) => {
+      state.new.loading = true;
+      state.new.error = false;
+    });
+    builder.addCase(fetchInquiriesForReport.rejected, (state) => {
+      state.new.loading = false;
+      state.new.error = true;
+    });
+    // setupReportBatch handlers
+    builder.addCase(setupReportBatch.fulfilled, (state, _action) => {
+      state.new.loading = false;
+    });
+    builder.addCase(setupReportBatch.pending, (state) => {
+      state.new.loading = true;
+      state.new.error = false;
+    });
+    builder.addCase(setupReportBatch.rejected, (state) => {
+      state.new.loading = false;
+      state.new.error = true;
+    });
+    // fetchBatchStatus handlers
+    builder.addCase(fetchBatchStatus.fulfilled, (state, action) => {
+      state.batchStatus.data = action.payload;
+      state.batchStatus.loading = false;
+      state.batchStatus.error = false;
+    });
+    builder.addCase(fetchBatchStatus.pending, (state) => {
+      state.batchStatus.loading = true;
+      state.batchStatus.error = false;
+    });
+    builder.addCase(fetchBatchStatus.rejected, (state) => {
+      state.batchStatus.loading = false;
+      state.batchStatus.error = true;
+    });
+    // updateBatchStatus handlers
+    builder.addCase(updateBatchStatus.fulfilled, (state, action) => {
+      state.batchStatus.data = action.payload;
+      state.batchStatus.loading = false;
+      state.batchStatus.error = false;
+    });
+    builder.addCase(updateBatchStatus.pending, (state) => {
+      state.batchStatus.loading = true;
+      state.batchStatus.error = false;
+    });
+    builder.addCase(updateBatchStatus.rejected, (state) => {
+      state.batchStatus.loading = false;
+      state.batchStatus.error = true;
     });
   },
 });

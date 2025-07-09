@@ -1,46 +1,46 @@
 .formControl {
-    width: 100%; 
-    max-width: 25ch;
-  }
-  
-  .formControl .MuiOutlinedInput-root {
-    border-radius: 6px;
-    height: 36px;
-    font-size: 12px;
-    width: 294px;
-  }
-  
-  .formControl .MuiOutlinedInput-root fieldset {
-    border-color: #989898; 
-  }
-  
-  .formControl .MuiOutlinedInput-root:hover fieldset {
-    border-color: #0B9DBD; 
-  }
-  
-  .formControl .MuiOutlinedInput-root.Mui-focused fieldset {
-    border-color: #0B9DBD;
-  }
-  
-  .formControl .MuiInputBase-input {
-    color: #3E3E3E;
-    padding: 10px;
-    width: 294px;
-  }
-  
-  .formControlError .MuiOutlinedInput-root fieldset {
-    border-color: #DA384C !important;
-  }
-  
-  .formControlHelperText {
-    margin-bottom: 12px !important;
-    margin-left: 0 !important;
-  }
-  
-  .formControlHelperTextError {
-    color: #DA384C !important;
-  }
-  
-  .formControlHelperTextNormal {
-    color: #0B9DBD !important;
-  }
+  width: 100%;
+  max-width: 25ch;
+}
+
+.formControl .MuiOutlinedInput-root {
+  border-radius: 6px;
+  height: 36px;
+  font-size: 12px;
+  width: 294px;
+}
+
+.formControl .MuiOutlinedInput-root fieldset {
+  border-color: #989898;
+}
+
+.formControl .MuiOutlinedInput-root:hover fieldset {
+  border-color: #0b9dbd;
+}
+
+.formControl .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #0b9dbd;
+}
+
+.formControl .MuiInputBase-input {
+  color: #3e3e3e;
+  padding: 10px;
+  width: 294px;
+}
+
+.formControlError .MuiOutlinedInput-root fieldset {
+  border-color: #da384c !important;
+}
+
+.formControlHelperText {
+  margin-bottom: 12px !important;
+  margin-left: 0 !important;
+}
+
+.formControlHelperTextError {
+  color: #da384c !important;
+}
+
+.formControlHelperTextNormal {
+  color: #0b9dbd !important;
+}

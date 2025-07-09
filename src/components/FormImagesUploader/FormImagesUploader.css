@@ -1,4 +1,4 @@
-.contentForUploadingImage{
+.contentForUploadingImage {
   display: flex;
   justify-content: start;
   align-items: flex-start;
@@ -13,7 +13,7 @@
   padding: 0 10px; /* Add padding to prevent edge overflow */
 }
 
-.containerForImageToUpload{
+.containerForImageToUpload {
   align-items: center;
   border: none;
   background: transparent;
@@ -28,42 +28,42 @@
   flex-shrink: 0; /* Prevent shrinking */
 }
 
-.areaToDropImage{
+.areaToDropImage {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 20px 10px;
   gap: 5px; /* Add small gap between elements */
-  border: 1px dashed #0B9DBD;
+  border: 1px dashed #0b9dbd;
   width: 100%; /* Use full width of container */
   height: 143px;
   background: transparent;
   box-sizing: border-box;
-  background: #F7FBFD;
+  background: #f7fbfd;
   border-radius: 10px;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease; /* Smooth transition for hover effects */
 }
 
-.areaToDropImage.active{
-  border: 2px dashed #0B9DBD;
-  background: #BFE6EF;
+.areaToDropImage.active {
+  border: 2px dashed #0b9dbd;
+  background: #bfe6ef;
 }
 
 .areaToDropImage:hover {
-  border-color: #0B9DBD;
+  border-color: #0b9dbd;
   background: rgba(191, 230, 239, 0.5);
 }
 
-.sentencesOfDropArea{
-  font-family: 'Noto Sans JP', sans-serif;
+.sentencesOfDropArea {
+  font-family: "Noto Sans JP", sans-serif;
   font-style: normal;
   font-size: 10px;
   line-height: 14px;
   text-align: center;
-  color: #3E3E3E;
+  color: #3e3e3e;
   font-weight: 700;
   margin: 0;
   margin-top: 7px;
@@ -72,16 +72,16 @@
   overflow-wrap: break-word; /* Better text wrapping */
 }
 
-.sentencesOfDropArea.isDragActive{
-  color: #0B9DBD;
+.sentencesOfDropArea.isDragActive {
+  color: #0b9dbd;
 }
 
-.sentencesOfDropAreaSpan{
+.sentencesOfDropAreaSpan {
   color: #989898;
   font-weight: 500;
 }
 
-.imageButton{
+.imageButton {
   width: 142px;
   max-width: 100%; /* Prevent overflow */
   height: 25px;
@@ -91,20 +91,20 @@
   align-items: center;
   font-size: 10px;
   font-weight: 700;
-  border: 1px solid #0B9DBD;
+  border: 1px solid #0b9dbd;
   border-radius: 11.6px;
-  color: #0B9DBD;
+  color: #0b9dbd;
   box-sizing: border-box;
   transition: all 0.2s ease; /* Add hover transition */
   flex-shrink: 0; /* Prevent shrinking */
 }
 
 .imageButton:hover {
-  background-color: #0B9DBD;
+  background-color: #0b9dbd;
   color: white;
 }
 
-.dragedImage{
+.dragedImage {
   width: 100%;
   max-width: 100%;
   height: 115px;
@@ -113,7 +113,7 @@
   border-radius: 8px; /* Add slight rounding */
 }
 
-.imageBlock{
+.imageBlock {
   width: 180px;
   min-width: 180px;
   max-width: 180px;
@@ -126,7 +126,7 @@
   flex-shrink: 0; /* Prevent shrinking */
 }
 
-.imageTitle{
+.imageTitle {
   margin-top: 5px;
   font-size: 12px;
   line-height: 18px;
@@ -139,12 +139,12 @@
   margin-bottom: 0; /* Remove bottom margin */
 }
 
-.imageTitleSpan{
+.imageTitleSpan {
   border-bottom: 1px solid #3e3e3e;
   display: inline-block; /* Better border display */
 }
 
-.deleteButton{
+.deleteButton {
   display: block;
   top: -10px;
   right: -10px;
@@ -170,7 +170,7 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
-.contentForUploadingImage .imageWrapper{
+.contentForUploadingImage .imageWrapper {
   position: relative !important;
   display: flex !important;
   flex-direction: column !important;
@@ -188,11 +188,11 @@
 }
 
 .contentForUploadingImage .imageWrapper.isDragActive {
-  border: 2px solid #0B9DBD !important;
-  background: #BFE6EF !important;
+  border: 2px solid #0b9dbd !important;
+  background: #bfe6ef !important;
 }
 
-.spanWithBorder{
+.spanWithBorder {
   border-bottom: 1px solid #3e3e3e;
 }
 
@@ -212,7 +212,7 @@
     padding: 0 8px;
     justify-content: flex-start; /* Upload card sticks to items */
   }
-  
+
   .containerForImageToUpload,
   .imageBlock {
     width: 110px; /* Reduced from 150px to fit 3 items */
@@ -221,33 +221,33 @@
     margin-top: 1.5vh;
     margin-left: 0.2vh;
   }
-  
+
   .contentForUploadingImage .imageWrapper {
     max-width: 100px !important;
     height: 100px !important; /* Keep original proportions */
   }
-  
+
   .dragedImage {
     height: 100px;
   }
-  
+
   .areaToDropImage {
     height: 120px; /* Keep original height */
     padding: 15px 8px;
   }
-  
+
   .sentencesOfDropArea {
     font-size: 5.5px; /* Keep readable size */
     line-height: 12px;
   }
-  
+
   .imageButton {
     width: 90px;
     height: 22px;
     font-size: 6px;
     margin-top: 6px;
   }
-  
+
   .imageTitle {
     font-size: 11px;
     line-height: 16px;
@@ -259,23 +259,23 @@
     gap: 6px;
     justify-content: flex-start; /* Upload card sticks to items */
   }
-  
+
   .containerForImageToUpload,
   .imageBlock {
     width: 105px;
     min-width: 105px;
     max-width: 105px;
   }
-  
+
   .contentForUploadingImage .imageWrapper {
     max-width: 95px !important;
     height: 95px !important;
   }
-  
+
   .dragedImage {
     height: 95px;
   }
-  
+
   .areaToDropImage {
     height: 110px;
     padding: 12px 6px;
@@ -289,39 +289,38 @@
     padding: 0 5px;
   }
 
-  .containerForImageToUpload
-  {
+  .containerForImageToUpload {
     margin-top: 1.8vh;
   }
-  
+
   .containerForImageToUpload,
   .imageBlock {
     width: 100px;
     min-width: 100px;
     max-width: 100px;
   }
-  
+
   .contentForUploadingImage .imageWrapper {
     max-width: 90px !important;
     height: 90px !important;
   }
-  
+
   .dragedImage {
     height: 90px;
   }
-  
+
   .areaToDropImage {
     height: 100px;
     padding: 10px 6px;
     gap: 3px;
   }
-  
+
   .sentencesOfDropArea {
     font-size: 5.5px;
     line-height: 11px;
     margin-top: 4px;
   }
-  
+
   .imageButton {
     width: 80px;
     height: 20px;
@@ -331,13 +330,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   .imageTitle {
     font-size: 10px;
     line-height: 14px;
     margin-top: 3px;
   }
-  
+
   .deleteButton {
     width: 20px;
     height: 20px;
@@ -352,33 +351,33 @@
     padding: 0 3px;
     justify-content: flex-start; /* Upload card sticks to items */
   }
-  
+
   .containerForImageToUpload,
   .imageBlock {
     width: 95px;
     min-width: 95px;
     max-width: 95px;
   }
-  
+
   .contentForUploadingImage .imageWrapper {
     max-width: 85px !important;
     height: 85px !important;
   }
-  
+
   .dragedImage {
     height: 85px;
   }
-  
+
   .areaToDropImage {
     height: 90px;
     padding: 8px 4px;
   }
-  
+
   .sentencesOfDropArea {
     font-size: 5.5px;
     line-height: 10px;
   }
-  
+
   .imageButton {
     width: 75px;
     height: 18px;
@@ -387,7 +386,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   .imageTitle {
     font-size: 9px;
     line-height: 12px;

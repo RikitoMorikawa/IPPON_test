@@ -25,6 +25,7 @@ import CustomDateTimePicker from "../../../components/CustomDateTimePicker";
 import "../Create/inquiryCreate.css";
 import dayjs from "dayjs";
 import { getEmployeeNames } from "../../../store/employeeSlice";
+import PostalCodeAutoAddressInput from "../../../components/PostalCodeAutoAddressInput";
 // Import notification utilities with types
 import {
   incrementNotificationCount,
@@ -84,6 +85,7 @@ const InquiryCreate = () => {
     handleSubmit,
     formState: { errors, isDirty, isValid },
     reset,
+    setValue,
   } = useForm<FormData>({
     defaultValues: {
       gender: "3",
@@ -161,7 +163,7 @@ const InquiryCreate = () => {
   const employeeOptions =
     employeeNames?.map((employee: any) => ({
       value: employee.id,
-      label: employee.first_name + " " + employee.family_name,
+      label: employee.last_name + " " + employee.first_name,
     })) || [];
 
   const navigate = useNavigate();
@@ -477,7 +479,7 @@ const InquiryCreate = () => {
               pl: { lg: 5, xs: 0, md: 0, sm: 0 },
             }}
           >
-            <CustomFullWidthInputGroup
+            {/* <CustomFullWidthInputGroup
               label="郵便番号"
               name="postalCode"
               type="text"
@@ -487,6 +489,7 @@ const InquiryCreate = () => {
               isModalInput={false}
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              autoSetAddress={autoSetAddress}
             />
 
             <CustomFullWidthSelectInputGroup
@@ -511,8 +514,16 @@ const InquiryCreate = () => {
               isModalInput={false}
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+            /> */}
+            <PostalCodeAutoAddressInput
+              register={register}
+              errors={errors}
+              setValue={setValue}
+              prefectureOptions={prefectureOptions}
+              inputWidth={leftInputContainerWidth}
+              inputWidthSp="100%"
+              control={control}
             />
-
             <CustomFullWidthInputGroup
               label="番地・区画"
               name="address"

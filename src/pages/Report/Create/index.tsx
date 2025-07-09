@@ -88,11 +88,16 @@ const ReportCreate: React.FC<ReportCreateProps> = ({
 
   // Load report data when reportId is provided
   useEffect(() => {
+    console.log("ReportCreate useEffect - reportId:", reportId, "aiGeneratedData:", aiGeneratedData);
+    
     if (reportId) {
       setIsEditMode(true);
       loadReportData(reportId);
     } else if (aiGeneratedData) {
       setIsEditMode(false);
+      console.log("Setting up new report with data:", aiGeneratedData);
+      console.log("Customer interactions:", aiGeneratedData.customer_interactions);
+      
       // Set AI generated data for new report
       reset({
         role: "general",
@@ -108,9 +113,13 @@ const ReportCreate: React.FC<ReportCreateProps> = ({
         property_id: propertyId || "",
         report_route_name: aiGeneratedData.report_route_name || "",
       });
-      setCustomerInteractions(aiGeneratedData.customer_interactions || []);
+      
+      const interactions = aiGeneratedData.customer_interactions || [];
+      console.log("Setting customer interactions:", interactions);
+      setCustomerInteractions(interactions);
     } else {
       setIsEditMode(false);
+      console.log("Setting up empty manual report");
       setCustomerInteractions([]); // Reset customer interactions
       // Reset form for new report
       reset({
@@ -204,7 +213,6 @@ const ReportCreate: React.FC<ReportCreateProps> = ({
       report_name: data.report_name,
       current_status: data.current_status,
       property_id: propertyId || data.property_id, // Use prop propertyId if available
-      report_route_name: data.report_route_name || reportId || "", // Use reportId for route name if available
       summary: data.summary,
       report_date: "2025-06-02",
       publish_status: "published",
@@ -217,6 +225,7 @@ const ReportCreate: React.FC<ReportCreateProps> = ({
       business_meeting_count: parseInt(data.business_meeting_count) || 0,
       viewing_count: parseInt(data.viewing_count) || 0,
       customer_interactions: customerInteractions,
+      is_new: !isEditMode, // report_idがない場合は手動作成（新規）
     };
     createReportData(payload);
   };

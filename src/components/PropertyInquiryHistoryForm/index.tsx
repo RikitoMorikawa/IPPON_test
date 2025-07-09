@@ -74,7 +74,7 @@ const PropertyInquiryHistoryForm = ({
     if (employeesNameData) {
       const transformedArray = employeesNameData.map((user: any) => ({
         value: user.id,
-        label: `${user.first_name} ${user.family_name}`,
+        label: `${user.last_name} ${user.first_name}`,
       }));
       setManagersName(transformedArray);
     }

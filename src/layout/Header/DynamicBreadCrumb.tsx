@@ -8,7 +8,6 @@ import {
   BreadcrumbPropertyIcon,
   BreadcrumbSettingIcon,
 } from "../../common/icons";
-import Cookies from "js-cookie";
 
 const routeConfig: Record<string, RouteEntry> = {
   "/dashboard": {
@@ -44,7 +43,7 @@ const routeConfig: Record<string, RouteEntry> = {
     icon: <BreadcrumbPropertyIcon />,
     breadcrumb: ({ params, propName }: { params: any; propName?: string }) => [
       { path: "/properties", title: "物件情報" },
-      { path: "/properties", title: "物件検索" },
+      { path: "/properties", title: "物件一覧" },
       {
         path: `/properties/${params.property_id}`,
         title: propName ?? `顧客ID: ${params.property_id}`,
@@ -100,11 +99,11 @@ const routeConfig: Record<string, RouteEntry> = {
   },
   "/setting/employees/:employee_id": {
     icon: <BreadcrumbSettingIcon />,
-    breadcrumb: [
+    breadcrumb: ({ employeeName }: { employeeName?: string }) => [
       { path: "/setting/employees", title: "アカウント設定" },
       {
         path: "/setting/employees/:employee_id",
-        title: `${Cookies.get("clientName")}`,
+        title: employeeName || "従業員詳細",
       },
     ],
   },
@@ -141,11 +140,13 @@ interface DynamicBreadcrumbProps {
   propName?: string; // Make optional if it might be undefined
   customerName?: string;
   tabName?: string;
+  employeeName?: string;
 }
 export default function DynamicBreadcrumb({
   propName,
   customerName,
   tabName,
+  employeeName,
 }: DynamicBreadcrumbProps) {
   const location = useLocation();
   const params = useParams();
@@ -172,6 +173,7 @@ export default function DynamicBreadcrumb({
           propName,
           customerName,
           tabName,
+          employeeName,
         });
       }
       if (Array.isArray(config.breadcrumb)) {
@@ -192,7 +194,7 @@ export default function DynamicBreadcrumb({
       }
     });
     return crumbs;
-  }, [location.pathname, params, propName, customerName]);
+  }, [location.pathname, params, propName, customerName, employeeName]);
 
   const icon = useMemo(() => {
     for (const [pattern, route] of Object.entries(routeConfig)) {

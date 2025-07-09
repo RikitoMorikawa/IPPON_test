@@ -35,6 +35,7 @@ const EmployeeUpdate = () => {
   const employeeId = useParams().employee_id;
   const isMobile = useMediaQuery('(max-width:600px)');
   const [originalValues, setOriginalValues] = useState<any>(null);
+  const userRole = Cookies.get("role");
 
   const { data: employeeData } = useSelector(
     (state: any) => state.employees.detailed
@@ -48,11 +49,11 @@ const EmployeeUpdate = () => {
     if (employeeData) {
     const initial = {
       firstName: employeeData.first_name || "",
-      lastName: employeeData.family_name || "",
-      furiFirstName: employeeData.first_name_kana || "",
-      furiLastName: employeeData.family_name_kana || "",
+      lastName: employeeData.last_name || "",
+      furiName: employeeData.first_name_kana || "",
+      furiLastName: employeeData.last_name_kana || "",
       email: employeeData.mail_address || "",
-      role: employeeData.role || "general",
+      role: employeeData.is_admin ? "admin" : "general",
     };
 
     Object.entries(initial).forEach(([key, value]) => {
@@ -72,13 +73,15 @@ const EmployeeUpdate = () => {
       )
     : false;
 
+  const canEdit = userRole === "admin";
+
   const onSubmit = (data: any) => {
     const payload = {
       client_id: clientId,
       first_name: data.firstName,
-      family_name: data.lastName,
-      first_name_kana: data.furiFirstName,
-      family_name_kana: data.furiLastName,
+      last_name: data.lastName,
+      first_name_kana: data.furiName,
+      last_name_kana: data.furiLastName,
       mail_address: data.email,
       role: data.role,
     };
@@ -88,12 +91,20 @@ const EmployeeUpdate = () => {
   const updateEmployeeData = async (payload: any) => {
     try {
       setLoading(true);
-      const id = employeeData?.employee_id;
+      const id = employeeData?.id;
       const updateResult = await dispatch(
         updateDetailedEmployee({ id, payload })
       );
 
       if (updateDetailedEmployee.fulfilled.match(updateResult)) {
+        // Update cookie role if the updated employee is the current logged-in user
+        const currentEmployeeId = Cookies.get("employeeID");
+        if (String(id) === String(currentEmployeeId)) {
+          const updatedEmployeeData = updateResult.payload;
+          const newRole = updatedEmployeeData?.is_admin ? "admin" : "general";
+          Cookies.set("role", newRole, { expires: 1 });
+        }
+
         addToast({
           message: "更新完了。",
           type: "success",
@@ -142,10 +153,11 @@ const EmployeeUpdate = () => {
               labelWidthSp="20%"
               inputWidth={'338px'}
               inputWidthSp={'100%'}
+              disabled={!canEdit}
             />
             <CustomTwoColInputGroup
               label='フリガナ'
-              firstName='furiFirstName'
+              firstName='furiName'
               lastName='furiLastName'
               placeholderOne='サトウ'
               placeholderTwo='タロウ'
@@ -156,6 +168,7 @@ const EmployeeUpdate = () => {
               labelWidthSp="20%"
                inputWidth={'338px'}
               inputWidthSp={'100%'}
+              disabled={!canEdit}
             />
             <CustomFullWidthCheckboxGroup
               label='ロール'
@@ -167,6 +180,8 @@ const EmployeeUpdate = () => {
               setValue={setValue}
               options={[{ value: "admin", label: "管理者" }]}
               labelWidth={`${isMobile? '26%' : '50px'}`}
+              uncheckedValue="general"
+              disabled={!canEdit}
             />
             <CustomFullWidthInputGroup
               label='メールアドレス'
@@ -181,6 +196,7 @@ const EmployeeUpdate = () => {
               labelWidthSp={'20%'}
               inputWidth={'338px'}
               inputWidthSp={'100%'}
+              disabled={!canEdit}
             />
           </Box>
         </Box>
@@ -201,7 +217,7 @@ const EmployeeUpdate = () => {
               onClick={handleCancelClick}
               buttonCategory='cancel'
             /> */}
-          <CustomButton label='更新' type='submit' isLoading={loading} disabled={!isFormChanged} />
+          <CustomButton label='更新' type='submit' isLoading={loading} disabled={!canEdit || !isFormChanged} />
         </Box>
       </Box>
       {toasts}

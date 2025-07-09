@@ -20,7 +20,8 @@ const CustomFullWidthCheckboxGroup: React.FC<CustomFullWidthCheckboxInputGroupPr
   setValue, // Add setValue from react-hook-form
   sx={},
   boxSx,
-  labelWidth
+  labelWidth,
+  uncheckedValue = "" // Add uncheckedValue prop with default empty string
 }) => {
   const registerOptions = isRequired ? { required: `${label}は必須です。` } : {};
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -34,8 +35,8 @@ const CustomFullWidthCheckboxGroup: React.FC<CustomFullWidthCheckboxInputGroupPr
         // Set the role to the option value (e.g., "admin")
         setValue(name, optionValue);
       } else {
-        // Clear the role when unchecked
-        setValue(name, "");
+        // Set the unchecked value when unchecked
+        setValue(name, uncheckedValue);
       }
     }
   };

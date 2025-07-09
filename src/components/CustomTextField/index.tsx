@@ -20,6 +20,12 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     "&.Mui-focused fieldset": {
       borderColor: "#D9D9D9 !important",
     },
+    "&.Mui-disabled": {
+      backgroundColor: "#F5F5F5 !important",
+      "& fieldset": {
+        borderColor: "#D9D9D9 !important",
+      },
+    },
   },
   "& .MuiOutlinedInput-input": {
     padding: "8px 12px",
@@ -35,6 +41,10 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
         fontSize: "12px",
       },
       color: "#989898",
+    },
+    "&.Mui-disabled": {
+      color: "#3e3e3e !important",
+      WebkitTextFillColor: "#3e3e3e !important",
     },
   },
   "@media (max-width: 600px)": {
@@ -58,12 +68,22 @@ export const CustomTextAreaField = styled(TextField)({
     "&.Mui-focused fieldset": {
       borderColor: "#D9D9D9 !important",
     },
+    "&.Mui-disabled": {
+      backgroundColor: "#F5F5F5 !important",
+      "& fieldset": {
+        borderColor: "#D9D9D9 !important",
+      },
+    },
   },
   "& .MuiOutlinedInput-input": {
     fontSize: "12px",
     "&::placeholder": {
       fontSize: "12px",
       opacity: 0.8,
+    },
+    "&.Mui-disabled": {
+      color: "#3e3e3e !important",
+      WebkitTextFillColor: "#3e3e3e !important",
     },
   },
   "@media (max-width: 600px)": {

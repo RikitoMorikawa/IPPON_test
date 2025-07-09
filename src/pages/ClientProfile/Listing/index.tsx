@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../../components/CustomButton";
 import CustomFullWidthInputGroup from "../../../components/CustomFullWidthInputGroup";
-import CustomFullWidthSelectInputGroup from "../../../components/CustomFullWidthSelectInputGroup";
 import SectionTitle from "../../../components/SectionTitle";
 import {
   fetchDetailedClient,
@@ -20,6 +19,7 @@ import {
 import { AppDispatch } from "../../../store";
 import { useToast } from "../../../components/Toastify";
 import Cookies from "js-cookie";
+import PostalCodeAutoAddressInput from "../../../components/PostalCodeAutoAddressInput";
 
 const ClientProfile = () => {
   const [, setIsFormValid] = useState(false);
@@ -32,7 +32,10 @@ const ClientProfile = () => {
   } = useForm();
 
   const client_id = Cookies.get("clientID");
+  const userRole = Cookies.get("role");
+  const isAdmin = userRole === "admin";
   const leftInputContainerWidth = "338px";
+  
   // More robust selector with debugging
   const detailClientData = useSelector(
     (state: any) => state.clients?.detailed?.data
@@ -104,7 +107,7 @@ const ClientProfile = () => {
       client_name_kana: data.client_name_kana,
       client_tell: data.client_tell,
       hp_address: data.hp_address,
-      postcode: data.postcode,
+      postcode: data.postal_code, // PostalCodeAutoAddressInput uses postal_code
       prefecture: data.prefecture,
       role: data.role,
       client_mail_address: data.client_mail_address,
@@ -126,13 +129,20 @@ const ClientProfile = () => {
       }
 
       if (updateDetailedClient.fulfilled.match(updateResult)) {
+        // Update clientName cookie for the current logged-in client
+        const updatedClientData = updateResult.payload;
+        if (updatedClientData?.client_name) {
+          Cookies.set("clientName", updatedClientData.client_name, { expires: 1 });
+        }
+        // Note: role should be managed server-side for security reasons
+        
         addToast({
           message: "更新完了 。",
           type: "success",
         });
       } else if (updateDetailedClient.rejected.match(updateResult)) {
         addToast({
-          message: "fail to update",
+          message: "更新に失敗しました。",
           type: "error",
         });
       }
@@ -169,7 +179,7 @@ const ClientProfile = () => {
       setValue("prefecture", detailClientData.prefecture);
       setValue("building", detailClientData.building);
       setValue("client_id", detailClientData.client_id);
-      setValue("postcode", detailClientData.postcode);
+      setValue("postal_code", detailClientData.postcode); // Map postcode to postal_code
       setValue("city", detailClientData.city);
     } else {
       console.error("No data available to set form values");
@@ -246,6 +256,7 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
             <CustomFullWidthInputGroup
               label="フリガナ"
@@ -259,6 +270,7 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
             <CustomFullWidthInputGroup
               label="電話番号"
@@ -273,6 +285,7 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
             <CustomFullWidthInputGroup
               label="メールアドレス"
@@ -287,6 +300,7 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
 
             <CustomFullWidthInputGroup
@@ -301,6 +315,7 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
           </Box>
         </Box>
@@ -319,44 +334,16 @@ const ClientProfile = () => {
               pl: { lg: 5, xs: 0, md: 0, sm: 0 },
             }}
           >
-            <CustomFullWidthInputGroup
-              label="郵便番号"
-              name="postcode"
-              type="number"
-              placeholder="1234567(ハイフンなし)"
+            <PostalCodeAutoAddressInput
               register={register}
               errors={errors}
-              isModalInput={false}
-              labelWidth="120px"
-              labelWidthSp="47%"
+              setValue={setValue}
+              control={control}
+              leftInputContainerWidth={leftInputContainerWidth}
+              prefectureOptions={area}
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
-            />
-            <CustomFullWidthSelectInputGroup
-              label="都道府県"
-              name="prefecture"
-              control={control} // Add this line
-              placeholder="選択してください。"
-              register={register}
-              errors={errors}
-              options={area}
-              labelWidth="120px"
-              labelWidthSp="47%"
-              inputWidth={leftInputContainerWidth}
-              inputWidthSp={"100%"}
-            />
-            <CustomFullWidthInputGroup
-              label="市区町村"
-              name="city"
-              type="text"
-              placeholder=""
-              register={register}
-              errors={errors}
-              isModalInput={false}
-              labelWidth="120px"
-              labelWidthSp="47%"
-              inputWidth={leftInputContainerWidth}
-              inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
             <CustomFullWidthInputGroup
               label="番地・区画"
@@ -370,6 +357,7 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
             <CustomFullWidthInputGroup
               label="建物名、部屋番号"
@@ -383,9 +371,11 @@ const ClientProfile = () => {
               labelWidthSp="47%"
               inputWidth={leftInputContainerWidth}
               inputWidthSp={"100%"}
+              disabled={!isAdmin}
             />
           </Box>
         </Box>
+        
         <Box
           sx={{
             backgroundColor: "rgb(221, 221, 221, 0.2)",
@@ -404,7 +394,7 @@ const ClientProfile = () => {
                 <CustomButton
                   label="登録"
                   type="submit"
-                  disabled={!isDirty}
+                  disabled={!isDirty || !isAdmin}
                   isLoading={loading}
                 />
               </Box>
@@ -416,4 +406,5 @@ const ClientProfile = () => {
     </Box>
   );
 };
+
 export default ClientProfile;

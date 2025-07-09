@@ -119,15 +119,15 @@ const MemberUpdate = () => {
     
     try {
       const {image_url, ...otherData} = data;
-      const payload = {
-        client_id: clientId,
-        first_name: otherData.firstName,
-        family_name: otherData.lastName,
-        first_name_kana: otherData.furiFirstName,
-        family_name_kana: otherData.furiLastName,
-        mail_address: otherData.email,
-        role: otherData.role,
-       }
+              const payload = {
+            client_id: clientId,
+            first_name: otherData.firstName,
+            last_name: otherData.lastName,
+            first_name_kana: otherData.furiFirstName,
+            last_name_kana: otherData.furiLastName,
+            mail_address: otherData.email,
+            role: otherData.role,
+        }
       
       // Update member data
       await updateMember(payload);
@@ -238,9 +238,9 @@ const MemberUpdate = () => {
   if (detailMemberData) {
     // Set form field values
     setValue('firstName', detailMemberData?.first_name);
-    setValue('lastName', detailMemberData?.family_name);
+    setValue('lastName', detailMemberData?.last_name);
     setValue('furiFirstName', detailMemberData?.first_name_kana);
-    setValue('furiLastName', detailMemberData?.family_name_kana);
+    setValue('furiLastName', detailMemberData?.last_name_kana);
     setValue('email', detailMemberData?.mail_address);
     setValue('role', detailMemberData?.role);
     
@@ -391,8 +391,8 @@ const MemberUpdate = () => {
             lastName="lastName"
             placeholderOne="佐藤"
             placeholderTwo="太郎"
-            validationMessageFirstName="お名前(名)は必須です"
-            validationMessageLastName="姓は必須です"
+            validationMessageFirstName="姓は必須です"
+            validationMessageLastName="お名前(名)は必須です"
             register={register}
             errors={errors}
             disabled={!isEdit || isSubmitting} // Disable during submit
@@ -401,8 +401,8 @@ const MemberUpdate = () => {
             label="フリガナ"
             firstName="furiFirstName"
             lastName="furiLastName"
-            validationMessageFirstName="フリガナ ファーストネームが必要です"
-            validationMessageLastName="フリガナ 姓が必要です"
+            validationMessageFirstName="フリガナ 姓が必要です"
+            validationMessageLastName="フリガナ ファーストネームが必要です"
             placeholderOne="サトウ"
             placeholderTwo="タロウ"
             register={register}

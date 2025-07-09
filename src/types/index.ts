@@ -209,6 +209,7 @@ export interface ReportsType {
   new: RequestState<Report[]>;
   searched: RequestState<Report[]>;
   detailed: RequestState<Report>;
+  batchStatus: RequestState<any>;
 }
 
 export type Employee = Record<string, any>;
@@ -395,6 +396,11 @@ export interface CustomFullWidthCheckboxInputGroupProps {
   checked?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   labelWidth?: string;
+  watch?: any;
+  setValue?: any;
+  sx?: any;
+  boxSx?: any;
+  uncheckedValue?: string;
 }
 export interface PerPageSelectBoxProps {
   value: number;
@@ -411,11 +417,11 @@ export interface HeaderLabels {
 }
 
 export interface CustomerInteraction {
-  date: string;
-  // title: string;
-  customer_name: string;
-  category: string;
-  content: string;
+  id?: string;            // inquiry_id (表示不要)
+  date: string;           // 日付
+  customer_name: string;  // 顧客名
+  category: string;       // カテゴリ
+  content: string;        // 内容
 }
 
 export interface MiniTableListProps {
@@ -446,6 +452,7 @@ export type RouteEntry = {
         propName?: string;
         customerName?: string;
         tabName?: string;
+        employeeName?: string;
       }) => BreadcrumbItem[]);
 };
 

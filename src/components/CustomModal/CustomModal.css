@@ -1,53 +1,53 @@
-.modalBox{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 304px;
-    background: #fff !important;
-    border-radius: 10px;
-    box-shadow: 0px 1px 24px 0px #5B5B5B40;
-    
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 304px;
+  background: #fff !important;
+  border-radius: 10px;
+  box-shadow: 0px 1px 24px 0px #5b5b5b40;
 }
-.modalBox.createModal{
-    width: 601px;
+.modalBox.createModal {
+  width: 601px;
 }
-.modalBox.createModal.sp{
-    width: 90%;
-    min-width: 310px;
+.modalBox.createModal.sp {
+  width: 90%;
+  min-width: 310px;
 }
-.modalBox.createModal .twoColLabel, .member.sp .twoColLabel{
-    width: 20%;
+.modalBox.createModal .twoColLabel,
+.member.sp .twoColLabel {
+  width: 20%;
 }
-.inquiry.sp .twoColLabel{
-    width: 47%;
+.inquiry.sp .twoColLabel {
+  width: 47%;
 }
-.modalBox.otherModal{
-    width: 304px;
+.modalBox.otherModal {
+  width: 304px;
 }
-.modalBox.flexColModal{
-    width: 508px;
+.modalBox.flexColModal {
+  width: 508px;
 }
-.modalBoxWrapper{
-    position: relative;
-    padding: 20px;
+.modalBoxWrapper {
+  position: relative;
+  padding: 20px;
 }
-.modalBox.sp .modalBoxWrapper{
-    padding: 18px 18px 10px 18px;
+.modalBox.sp .modalBoxWrapper {
+  padding: 18px 18px 10px 18px;
 }
-.modalBox.sp.otherModal .modalBoxWrapper{
-    padding: 25px 30px 20px 30px;
+.modalBox.sp.otherModal .modalBoxWrapper {
+  padding: 25px 30px 20px 30px;
 }
-.closeIcon{
-    position: absolute;
-    right: 21px;
-    top: 17px;
-    cursor: pointer;
+.closeIcon {
+  position: absolute;
+  right: 21px;
+  top: 17px;
+  cursor: pointer;
 }
-.modalBox.sp .closeIcon svg{
-    width: 12px;
-    height: 12px;
+.modalBox.sp .closeIcon svg {
+  width: 12px;
+  height: 12px;
 }
-.properties.sp .propertiesFormInputsGroup .modalInputLabel{
-    width: 20% !important;
+.properties.sp .propertiesFormInputsGroup .modalInputLabel {
+  width: 20% !important;
 }

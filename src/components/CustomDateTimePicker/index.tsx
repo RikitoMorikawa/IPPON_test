@@ -3,11 +3,11 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/ja"; // Import Japanese locale
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TextField, MenuItem, Stack, Box } from "@mui/material";
+import { TextField, MenuItem, Stack, Box, useMediaQuery } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "./CustomDateTimePicker.css";
 import { ReportCalendarIcon } from "../../common/icons"; // Updated import
-
+import { useTheme } from "@mui/material/styles";
 dayjs.extend(utc);
 dayjs.locale("ja"); // Set Japanese locale
 
@@ -18,7 +18,7 @@ interface CustomDateTimePickerProps {
   minDate?: dayjs.Dayjs; // Optional min date
   width?: any; // Optional width for date picker
   value?: any;
-  defaultValue?: dayjs.Dayjs | null; // Optional default value
+  defaultValue?: dayjs.Dayjs | null;
 }
 
 const customTheme = createTheme({
@@ -131,7 +131,9 @@ const CustomDateTimePicker = ({
       },
     },
   };
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // 600px以下
+  const dateFormat = isMobile ? "MM/DD" : "YYYY/MM/DD";
   return (
     <ThemeProvider theme={customTheme}>
       <Box width="inherit">
@@ -141,7 +143,9 @@ const CustomDateTimePicker = ({
             minDate={minDate}
             maxDate={maxDate}
             onChange={(newValue) => setDate(newValue)}
-            format="YYYY/MM/DD" // Changed to slash format
+            // format="YYYY/MM/DD"
+            format={dateFormat}
+            // Changed to slash format
             // Explicitly set locale for the calendar
             dayOfWeekFormatter={(date) => dayjs(date).locale("ja").format("dd")}
             // Custom month/year header format

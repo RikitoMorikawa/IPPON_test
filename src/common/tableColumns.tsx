@@ -54,7 +54,7 @@ export const memberColumns = ({
     headerClassName: "headerStyle",
     renderCell: (params) => (
       <Link to={`/members/${params.row.id}`} style={{ color: "#3e3e3e" }}>
-        {`${params.row.firstName || ""} ${params.row.lastName || ""}`}
+        {`${params.row.lastName || ""} ${params.row.firstName || ""}`}
       </Link>
     ),
   },
@@ -65,7 +65,7 @@ export const memberColumns = ({
     width: 160,
     headerClassName: "headerStyle",
     valueGetter: (_value, row) =>
-      `${row.firstNameOfFurigana || ""} ${row.lastNameOfFurigana || ""}`,
+      `${row.lastNameOfFurigana || ""} ${row.firstNameOfFurigana || ""}`,
   },
   {
     field: "email",
@@ -156,7 +156,7 @@ export const employeeColumns = ({
           textDecoration: "underline",
         }}
       >
-        {`${params.row.firstName || ""} ${params.row.lastName || ""}`}
+        {`${params.row.lastName || ""} ${params.row.firstName || ""}`}
       </Link>
     ),
   },
@@ -167,7 +167,7 @@ export const employeeColumns = ({
     headerClassName: "headerStyle",
     sortable: false,
     valueGetter: (_value, row) =>
-      `${row.firstNameOfFurigana || ""} ${row.lastNameOfFurigana || ""}`,
+      `${row.lastNameOfFurigana || ""} ${row.firstNameOfFurigana || ""}`,
   },
   {
     field: "email",

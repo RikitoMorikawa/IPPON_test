@@ -143,7 +143,7 @@ const InquiryUpdate = () => {
   const employeeOptions =
     employeeNames?.map((employee: any) => ({
       value: employee.id,
-      label: employee.first_name + " " + employee.family_name,
+      label: employee.last_name + " " + employee.first_name,
     })) || [];
 
   const [initialFormData, setInitialFormData] = useState<any>({});

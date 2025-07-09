@@ -17,25 +17,6 @@ const CustomTwoColInput: React.FC<CustomTwoColProps> = ({ firstName, lastName, p
         fullWidth
         label=""
         placeholder={placeholderOne}
-        // {...register(firstName, { required: `${firstName} is required` })}
-        {...register(firstName, isRequired ? { required: validationMessageFirstName } : {})}
-        error={!!errors[firstName]}
-        helperText={errors[firstName]?.message}
-        disabled={disabled}
-        InputProps={{
-          endAdornment: index > 0 && (
-            <InputAdornment position="end">
-              <IconButton onClick={() => onRemove?.(index)} edge="end" color="error" sx={{width: '30px', padding: '10px'}}>
-                <CustomCloseIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        />
-        <CustomTextField
-        fullWidth
-        label=""
-        placeholder={placeholderTwo}
         // {...register(lastName, { required: `${lastName} is required`  })}
         {...register(lastName, isRequired ? { required: validationMessageLastName  } : {})}
         error={!!errors[lastName]}
@@ -46,6 +27,25 @@ const CustomTwoColInput: React.FC<CustomTwoColProps> = ({ firstName, lastName, p
             <InputAdornment position="end">
               <IconButton onClick={() => onRemove?.(index)} edge="end" color="error" sx={{width: '30px', padding: '10px'}}>
               <CustomCloseIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        />
+        <CustomTextField
+        fullWidth
+        label=""
+        placeholder={placeholderTwo}
+        // {...register(firstName, { required: `${firstName} is required` })}
+        {...register(firstName, isRequired ? { required: validationMessageFirstName } : {})}
+        error={!!errors[firstName]}
+        helperText={errors[firstName]?.message}
+        disabled={disabled}
+        InputProps={{
+          endAdornment: index > 0 && (
+            <InputAdornment position="end">
+              <IconButton onClick={() => onRemove?.(index)} edge="end" color="error" sx={{width: '30px', padding: '10px'}}>
+                <CustomCloseIcon />
               </IconButton>
             </InputAdornment>
           ),

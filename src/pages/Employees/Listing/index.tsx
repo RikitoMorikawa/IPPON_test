@@ -46,7 +46,7 @@ const EmployeesListing = () => {
   const [employees, setEmployees] = useState<any>([]);
   const [changeFlag, setChangeFlag] = useState(false);
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
-    const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [pagination, setPagination] = useState<PaginationInfo>({
     total: 0,
@@ -60,9 +60,9 @@ const EmployeesListing = () => {
   };
 
   /*** checkbox checked handler for sp view ***/
-  const spRowCheckedHandler = (selectedRows: any)=>{
-    handleRowSelection(selectedRows)
-  }
+  const spRowCheckedHandler = (selectedRows: any) => {
+    handleRowSelection(selectedRows);
+  };
   /***checkbox checked handler for sp view ***/
 
   const handleRowSelection = (selectedRows: any[]) => {
@@ -199,16 +199,16 @@ const EmployeesListing = () => {
     if (employeesData && employeesData.length !== 0) {
       const rows = employeesData?.items?.map(
         (employee: any, index: number) => ({
-          id: employee.employee_id || index,
-          lastName: employee.family_name || "",
+          id: employee.id || index,
+          lastName: employee.last_name || "",
           firstName: employee.first_name || "",
           firstNameOfFurigana: employee.first_name_kana || "",
-          lastNameOfFurigana: employee.family_name_kana || "",
+          lastNameOfFurigana: employee.last_name_kana || "",
           email: employee.mail_address || "",
-          adminStatus: employee.role === "admin" ? "管理者" : "-",
-          registration_timestamp: formatDateTime(employee.register_timestamp),
-          iso_registration_timestamp: employee.register_timestamp,
-          update_timestamp: formatDateTime(employee.update_timestamp),
+          adminStatus: employee.is_admin ? "管理者" : "-",
+          registration_timestamp: formatDateTime(employee.created_at),
+          iso_registration_timestamp: employee.created_at,
+          update_timestamp: formatDateTime(employee.updated_at),
         })
       );
       setEmployees(rows);
@@ -222,12 +222,12 @@ const EmployeesListing = () => {
 
   return (
     <Box py={3}>
-      <SectionTitle title='管理アカウント' />
+      <SectionTitle title="管理アカウント" />
       <Stack
         direction={{ xs: "column", md: "row" }}
         justifyContent={"space-between"}
         sx={{
-          margin: {xs: '15px 0', sm: '20px 0'}
+          margin: { xs: "15px 0", sm: "20px 0" },
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -235,37 +235,53 @@ const EmployeesListing = () => {
             direction={{ xs: "row", sm: "row" }}
             justifyContent={"flex-start"}
             gap={1}
-            sx={{ width: "100%" }}>
+            sx={{ width: "100%" }}
+          >
             <CustomTextField
               fullWidth
-              placeholder='キーワードで絞り込む'
+              placeholder="キーワードで絞り込む"
               {...register("search")}
               slotProps={{
                 input: {
-                  startAdornment: <Search sx={{ color: "#989898", mr: 1 }} />,
+                  startAdornment: (
+                    <Search sx={{ color: "#989898", fontSize: 20 }} />
+                  ),
                 },
               }}
               sx={{
                 width: "401px",
+                height: 34,
                 ".MuiInputBase-root": {
-                  height: {xs: '34px', sm: '38px'},
+                  height: 34,
+                  borderRadius: "8px",
                   borderColor: "#989898",
-                  marginBottom: {xs: '10px', sm: ''},
+                  paddingLeft: 1,
+                  fontFamily: "Noto Sans JP",
                 },
                 input: {
-                  fontSize: "14px !important",
-                  padding: "8px 12px 8px 0 !important",
+                  fontSize: "12px",
+                  padding: "7px 8px",
+                  "&::placeholder": {
+                    color: "#989898",
+                    opacity: 1,
+                  },
                 },
               }}
             />
-            <Box sx={{display: 'flex', gap: 1}}>
+            <Box sx={{ display: "flex", gap: 1 }}>
               <CustomButton
-                type='submit'
-                label={`${isMobile?'':'検索'}`}
-                className={`${isMobile?'serchSp':''}`}
+                type="submit"
+                label={`${isMobile ? "" : "検索"}`}
+                className={`${isMobile ? "serchSp" : ""}`}
                 startIcon={<Search sx={{ fontSize: "18px !important" }} />}
               />
-              <CustomButton type='button' label='クリア' sx={{whiteSpace: 'nowrap'}} className={`${isMobile?'serchSp':''}`} onClick={clearSearch} />
+              <CustomButton
+                type="button"
+                label="クリア"
+                sx={{ whiteSpace: "nowrap" }}
+                className={`${isMobile ? "serchSp" : ""}`}
+                onClick={clearSearch}
+              />
             </Box>
           </Stack>
         </form>
@@ -274,14 +290,15 @@ const EmployeesListing = () => {
             direction={{ xs: "row", sm: "row" }}
             justifyContent={"flex-end"}
             gap={1}
-            sx={{ minWidth: "fit-content", mt: {lg:0, xs: 1} }}>
+            sx={{ minWidth: "fit-content", mt: { lg: 0, xs: 1 } }}
+          >
             <CustomButton
-              label='新規追加'
+              label="新規追加"
               startIcon={<Add sx={{ fontSize: "18px !important" }} />}
               onClick={handleOpenModal}
             />
             <CustomButton
-              label='削除'
+              label="削除"
               startIcon={<ButtonDeleteIcon />}
               onClick={handleOpenDeleteModal}
               className={`delete ${
@@ -301,19 +318,20 @@ const EmployeesListing = () => {
 
       {/* Delete Confirmation Modal */}
       <CustomModal
-        title='削除の確認'
+        title="削除の確認"
         openModal={openDeleteModal}
         handleCloseModal={() => setOpenDeleteModal(false)}
-        bodyText='物件を削除してよろしいですか？'>
+        bodyText="削除してよろしいですか？"
+      >
         <Box sx={{ display: "flex", justifyContent: "center", gap: "10px" }}>
           <CustomButton
-            label='削除'
+            label="削除"
             onClick={handleDelete}
-            buttonCategory='delete'
+            buttonCategory="delete"
           />
           <CustomButton
-            label='戻る'
-            type='button'
+            label="戻る"
+            type="button"
             onClick={() => setOpenDeleteModal(false)}
           />
         </Box>

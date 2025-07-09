@@ -1,79 +1,79 @@
-.buttonStyle{
-    background-color: #0B9DBD !important;
-    font-size: 14px !important;
-    height: 38px;
-    padding: 12px !important;
-    border-radius: 8px !important;
+.buttonStyle {
+  background-color: #0b9dbd !important;
+  font-size: 14px !important;
+  height: 38px;
+  padding: 12px !important;
+  border-radius: 8px !important;
 }
-.buttonStyle.sp{
-    height: 34px;
-    font-size: 12px !important;
-    padding: 10px !important;
-    min-width: max-content;
+.buttonStyle.sp {
+  height: 34px;
+  font-size: 12px !important;
+  padding: 10px !important;
+  min-width: max-content;
 }
-.buttonStyle.cellButton{
-    height: 32px;
-    font-size: 12px !important;
+.buttonStyle.cellButton {
+  height: 32px;
+  font-size: 12px !important;
 }
-.buttonStyle.cellButton.disabled{
-    background-color: #989898 !important;
-    pointer-events: none;
-    cursor: inherit;
+.buttonStyle.cellButton.disabled {
+  background-color: #989898 !important;
+  pointer-events: none;
+  cursor: inherit;
 }
-.buttonStyle.cellButton.sendMailBtn{
-    background-color: #fff !important;
-    color: #0B9DBD;
-    border: 1px solid #0B9DBD;
-    box-shadow: inherit !important;
+.buttonStyle.cellButton.sendMailBtn {
+  background-color: #fff !important;
+  color: #0b9dbd;
+  border: 1px solid #0b9dbd;
+  box-shadow: inherit !important;
 }
-.buttonStyle.cellButton.sendMailBtn.sp{
-    height: 23px;
-    border-radius: 4px !important;
-    font-size: 10px !important;
+.buttonStyle.cellButton.sendMailBtn.sp {
+  height: 23px;
+  border-radius: 4px !important;
+  font-size: 10px !important;
 }
-.buttonStyle.disabled{
-    background-color: #989898 !important;
-    pointer-events: none;
-    cursor: inherit;
+.buttonStyle.disabled {
+  background-color: #989898 !important;
+  pointer-events: none;
+  cursor: inherit;
 }
-.buttonStyle.cancel{
-	background-color: #989898 !important;
+.buttonStyle.cancel {
+  background-color: #989898 !important;
 }
 
-.buttonStyle.delete{
-	background-color: #DA384C !important;
+.buttonStyle.delete {
+  background-color: #da384c !important;
 }
 
 .buttonStyle.changePasswordBtn {
-    height: 34px;
+  height: 34px;
 }
 
-.buttonStyle.delete.active{
-    background-color: #DA384C !important;
+.buttonStyle.delete.active {
+  background-color: #da384c !important;
 }
 
-.buttonStyle.delete.disabled{
-    background-color: #989898 !important;
-    pointer-events: none;
+.buttonStyle.delete.disabled {
+  background-color: #989898 !important;
+  pointer-events: none;
 }
-.buttonStyle.admin{
-    background: blue;
-}
-
-.buttonStyle.errorBtn{
-    min-width: 124px;
+.buttonStyle.admin {
+  background: blue;
 }
 
-.buttonStyle.errorBtn.sp{
-    min-width: inherit;
+.buttonStyle.errorBtn {
+  min-width: 124px;
+}
+
+.buttonStyle.errorBtn.sp {
+  min-width: inherit;
 }
 .buttonStyle.serchSp {
-    width: 20px;
-    display: flex;
-    justify-content: center;
+  width: 20px;
+  display: flex;
+  justify-content: center;
 }
 
-.buttonStyle.serchSp .MuiButton-icon{
-    margin-left: 0;
-    margin-right: 0;
+.buttonStyle.serchSp .MuiButton-icon {
+  margin-left: 0;
+  margin-right: 0;
 }

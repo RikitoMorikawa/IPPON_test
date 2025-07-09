@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router";
 import { InquiryTableChip } from "../pages/Inquiry/Listing/InquiryTableChip";
 import { formatDateTime } from "./formatDate";
-import { DropDownArrowIcon, SendMailIcon, SPLinkIcon } from "./icons";
+import { DropDownArrowIcon, SendMailIcon } from "./icons";
 import CustomButton from "../components/CustomButton";
 
 export const spInquiryFieldConfig = (
@@ -206,7 +206,7 @@ export const spEmployeeFieldConfig = (
     label: "名前",
     key: "firstName",
     render: (_value: string, row: any) => {
-      const fullName = `${row.firstName || ""} ${row.lastName || ""}`.trim();
+      const fullName = `${row.lastName || ""} ${row.firstName || ""}`.trim();
       return (
         <span
           style={{
@@ -229,9 +229,6 @@ export const spEmployeeFieldConfig = (
           >
             {`${fullName || ""}`}
           </Link>
-          <span style={{ display: "flex" }}>
-            <SPLinkIcon />
-          </span>
         </span>
       );
     },
@@ -263,8 +260,8 @@ export const spEmployeeFieldConfig = (
     label: "フリガナ",
     key: "firstNameOfFurigana",
     render: (_value: string, row: any) => {
-      const fullNameOfKatana = `${row.firstNameOfFurigana || ""} ${
-        row.lastNameOfFurigana || ""
+      const fullNameOfKatana = `${row.lastNameOfFurigana || ""} ${
+        row.firstNameOfFurigana || ""
       }`.trim();
       return (
         <span

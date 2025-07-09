@@ -211,7 +211,7 @@ const Sidebar = ({
     },
     {
       id: "property",
-      label: "物件検索",
+      label: "物件情報",
       icon: (
         <svg
           width="20"

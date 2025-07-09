@@ -2,12 +2,11 @@ import { useState } from "react";
 import ReportListing from "../Listing";
 import ReportCreate from "../Create";
 import { useParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../store";
-import { generateReportWithAI } from "../../../store/reportSlice";
+import { fetchInquiriesForReport } from "../../../store/reportSlice";
 import { Box } from "@mui/material";
 import { useToast } from "../../../components/Toastify";
-import dayjs from "dayjs";
 
 type ViewType = "listing" | "create" | "edit";
 
@@ -16,16 +15,16 @@ const ReportManager = () => {
   const [selectedReportId, setSelectedReportId] = useState<string | undefined>(
     undefined
   );
-  const [aiGeneratedData, setAiGeneratedData] = useState<any>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [inquiryData, setInquiryData] = useState<any>(null);
+  const [isLoadingInquiries, setIsLoadingInquiries] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState<{
+    start_date: string;
+    end_date: string;
+  } | null>(null);
   const { property_id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const { addToast } = useToast();
 
-  // 物件詳細情報を取得
-  const { data: propertyData } = useSelector(
-    (state: any) => state.properties.detailed
-  );
 
   const handleReportSelect = (reportId: string) => {
     setSelectedReportId(reportId);
@@ -35,10 +34,11 @@ const ReportManager = () => {
   const handleBackToListing = () => {
     setCurrentView("listing");
     setSelectedReportId(undefined);
-    setAiGeneratedData(null);
+    setInquiryData(null);
+    setSelectedPeriod(null);
   };
 
-  const handleCreateNew = async () => {
+  const handleCreateNew = async (period?: { start_date: string; end_date: string }) => {
     if (!property_id) {
       addToast({
         type: "error",
@@ -47,46 +47,56 @@ const ReportManager = () => {
       return;
     }
 
-    if (!propertyData) {
-      addToast({
-        type: "error",
-        message: "物件情報が見つかりません。",
-      });
-      return;
+    // 期間が指定されている場合は問い合わせデータを取得
+    if (period && period.start_date && period.end_date) {
+      console.log("Fetching inquiries for period:", period);
+      console.log("Property ID:", property_id);
+      
+      setIsLoadingInquiries(true);
+      try {
+        const result = await dispatch(fetchInquiriesForReport({
+          property_id: property_id,
+          start_date: period.start_date,
+          end_date: period.end_date,
+        })).unwrap();
+        
+        console.log("Inquiry data fetched successfully:", result);
+        setInquiryData(result);
+        setSelectedPeriod(period);
+        
+        addToast({
+          type: "success",
+          message: `問い合わせデータを取得しました（${Array.isArray(result) ? result.length : 0}件）`,
+        });
+      } catch (error) {
+        console.error("Error fetching inquiries:", error);
+        addToast({
+          type: "error",
+          message: "問い合わせデータの取得中にエラーが発生しました。",
+        });
+      } finally {
+        setIsLoadingInquiries(false);
+      }
+    } else {
+      // 期間が指定されていない場合はそのまま手動作成モードに遷移
+      console.log("No period specified, creating manual report");
+      setInquiryData(null);
+      setSelectedPeriod(null);
     }
 
-    setIsGenerating(true);
-    try {
-      // デフォルトで過去1週間の期間を設定
-      const endDate = dayjs().format("YYYY-MM-DD");
-      const startDate = dayjs().subtract(7, "day").format("YYYY-MM-DD");
-
-      const payload = {
-        property_id: property_id,
-        client_id: propertyData.client_id || "", // 物件詳細からclient_idを取得
-        property_name: propertyData.name || "", // 物件名を取得
-        report_start_date: startDate,
-        report_end_date: endDate,
-      };
-
-      const result = await dispatch(generateReportWithAI(payload)).unwrap();
-      setAiGeneratedData(result);
-      setSelectedReportId(undefined);
-      setCurrentView("create");
-    } catch (error) {
-      console.error("Error generating AI report:", error);
-      addToast({
-        type: "error",
-        message: "AI報告書の生成中にエラーが発生しました。",
-      });
-    } finally {
-      setIsGenerating(false);
-    }
+    setSelectedReportId(undefined);
+    setCurrentView("create");
   };
 
-  const handleSaveSuccess = () => {
+  const handleSaveSuccess = (reportId?: string) => {
     // Optional: Refresh listing data or perform other actions after successful save
-    setAiGeneratedData(null);
+    setInquiryData(null);
+    setSelectedPeriod(null);
+    
+    // Log the created report ID if available
+    if (reportId) {
+      console.log("Report successfully created with ID:", reportId);
+    }
   };
 
   const renderCurrentView = () => {
@@ -106,7 +116,10 @@ const ReportManager = () => {
             reportId={currentView === "edit" ? selectedReportId : undefined}
             propertyId={property_id}
             aiGeneratedData={
-              currentView === "create" ? aiGeneratedData : undefined
+              currentView === "create" ? { 
+                customer_interactions: inquiryData || [],
+                period: selectedPeriod
+              } : undefined
             }
             onBack={handleBackToListing}
             onSaveSuccess={handleSaveSuccess}
@@ -123,7 +136,7 @@ const ReportManager = () => {
     }
   };
 
-  if (isGenerating) {
+  if (isLoadingInquiries) {
     return (
       <Box
         sx={{
@@ -137,7 +150,7 @@ const ReportManager = () => {
       >
         {/* <CircularProgress size={60} sx={{ color: "#344052" }} /> */}
         <Box sx={{ mt: 2, color: "#344052", fontSize: "14px" }}>
-          AIが報告書を作成中
+          問い合わせデータを取得中
         </Box>
       </Box>
     );

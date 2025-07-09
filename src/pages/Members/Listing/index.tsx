@@ -142,12 +142,12 @@ const MembersListing = () => {
     if(membersData && membersData.length!==0){
       const rows = membersData?.map((member:any, index:number) => ({
         id: member.member_id || index,
-        lastName: member.family_name || "",
+        lastName: member.last_name || "",
         firstName: member.first_name || "",
         firstNameOfFurigana: member.first_name_kana || "",
-        lastNameOfFurigana: member.family_name_kana || "",
+        lastNameOfFurigana: member.last_name_kana || "",
         email: member.mail_address || "",
-        adminStatus: member.role ==='admin' ? "管理者" : "-",
+        adminStatus: member.is_admin ? "管理者" : "-",
         registration_timestamp: formatDateTime(member.register_timestamp),
         update_timestamp: formatDateTime(member.update_timestamp),
     }));

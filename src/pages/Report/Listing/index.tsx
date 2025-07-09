@@ -10,9 +10,13 @@ import Table from "../../../components/Table";
 import ReportSearch from "./ReportSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../store";
-import { searchReports, fetchPropertyReports } from "../../../store/reportSlice";
+import {
+  searchReports,
+  fetchPropertyReports,
+} from "../../../store/reportSlice";
 import { PaginationInfo } from "../../../types";
-
+import { useTheme, useMediaQuery } from "@mui/material";
+import TableMobile from "../../../components/TableMobile";
 // Updated interface to match ReportSearch component
 interface SearchParams {
   period?: string;
@@ -31,7 +35,7 @@ interface ApiSearchParams {
 
 interface ReportListingProps {
   onReportSelect?: (reportId: string) => void; // Callback when report is selected for editing
-  onCreateNew?: () => void; // Callback when creating a new report
+  onCreateNew?: (period?: { start_date: string; end_date: string }) => void; // Callback when creating a new report
   property_id?: string; // Optional property ID for filtering reports by property
 }
 
@@ -51,7 +55,8 @@ const ReportListing: React.FC<ReportListingProps> = ({
     page: 1,
     limit: 10,
   });
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const getReportColumns = (): GridColDef<any>[] => {
     const baseColumns: GridColDef<any>[] = [
       {
@@ -144,10 +149,12 @@ const ReportListing: React.FC<ReportListingProps> = ({
       let result;
       if (property_id) {
         // Use property-specific reports endpoint
-        result = await dispatch(fetchPropertyReports({
-          property_id,
-          ...cleanedPayload
-        }));
+        result = await dispatch(
+          fetchPropertyReports({
+            property_id,
+            ...cleanedPayload,
+          })
+        );
       } else {
         // Use general reports endpoint
         result = await dispatch(searchReports(cleanedPayload));
@@ -225,6 +232,7 @@ const ReportListing: React.FC<ReportListingProps> = ({
           // totalCount={pagination.total}
           currentSearchParams={searchParams}
           onCreateNew={onCreateNew}
+          property_id={property_id}
         />
       </Box>
       <Box pt={2}>
@@ -262,14 +270,24 @@ const ReportListing: React.FC<ReportListingProps> = ({
           )}
         </Stack>
       </Box>
-      <Table
-        isLoading={isLoading}
-        rows={report}
-        columns={reportColumns}
-        checkbox={false}
-        pagination={pagination}
-        onPageChange={handlePageChange}
-      />
+      {isMobile ? (
+        <TableMobile
+          isLoading={isLoading}
+          rows={report}
+          columns={reportColumns}
+          pagination={pagination}
+          onPageChange={handlePageChange}
+        />
+      ) : (
+        <Table
+          isLoading={isLoading}
+          rows={report}
+          columns={reportColumns}
+          checkbox={false}
+          pagination={pagination}
+          onPageChange={handlePageChange}
+        />
+      )}
     </Box>
   );
 };

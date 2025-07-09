@@ -26,9 +26,9 @@ const CreateMember = ({openModal,setOpenModal,onCreateSuccess}:any) => {
         const payload = {
             client_id: clientId,
             role: data.role,
-            family_name: data.lastName,
+            last_name: data.lastName,
             first_name: data.firstName,
-            family_name_kana: data.furiLastName,
+            last_name_kana: data.furiLastName,
             first_name_kana: data.furiFirstName,
             mail_address: data.email,
         }

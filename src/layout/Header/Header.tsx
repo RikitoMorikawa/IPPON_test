@@ -39,6 +39,7 @@ const Header = () => {
       action: "logout",
     },
   ];
+
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,7 +53,15 @@ const Header = () => {
   const { data: propertiesInquiriesData } = useSelector(
     (state: any) => state.propertiesInquiries.detailed
   );
+  const { data: employeeData } = useSelector(
+    (state: any) => state.employees.detailed
+  );
   const clientName = Cookies.get("clientName");
+  console.log("クッキーの中身", Cookies.get());
+  console.log("名前の取得情報の更新", clientName);
+  console.log("inquiryData", inquiryData);
+  console.log("propertiesInquiriesData", propertiesInquiriesData);
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -89,7 +98,7 @@ const Header = () => {
             const inquiryCustomerName =
               inquiryData.inquiry?.customer?.first_name &&
               inquiryData.inquiry?.customer?.last_name
-                ? `${inquiryData.inquiry.customer.first_name.trim()} ${inquiryData.inquiry.customer.last_name.trim()}`
+                ? `${inquiryData.inquiry.customer.last_name.trim()} ${inquiryData.inquiry.customer.first_name.trim()}`
                 : "";
 
             // propertiesInquiries.detailedから顧客名を取得
@@ -99,11 +108,18 @@ const Header = () => {
               propertiesInquiriesData.items.length > 0 &&
               propertiesInquiriesData.items[0].inquiry?.customer?.first_name &&
               propertiesInquiriesData.items[0].inquiry?.customer?.last_name
-                ? `${propertiesInquiriesData.items[0].inquiry.customer.first_name.trim()} ${propertiesInquiriesData.items[0].inquiry.customer.last_name.trim()}`
+                ? `${propertiesInquiriesData.items[0].inquiry.customer.last_name.trim()} ${propertiesInquiriesData.items[0].inquiry.customer.first_name.trim()}`
                 : "";
 
             // どちらかが存在すれば返す（inquiry.detailedを優先）
             return inquiryCustomerName || propertiesInquiryCustomerName || "";
+          })()}
+          employeeName={(() => {
+            // employee.detailedから従業員名を取得
+            if (employeeData?.last_name && employeeData?.first_name) {
+              return `${employeeData.last_name.trim()} ${employeeData.first_name.trim()}`;
+            }
+            return "";
           })()}
         />
         {/* <IconButton 

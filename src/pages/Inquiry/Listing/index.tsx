@@ -314,7 +314,7 @@ const InquiryListing = () => {
   const employeeOptions =
     employeeNames?.map((employee: any) => ({
       value: employee.id,
-      label: employee.first_name + " " + employee.family_name,
+      label: employee.last_name + " " + employee.first_name,
     })) || [];
 
   const dispatch = useDispatch<AppDispatch>();
@@ -424,9 +424,9 @@ const InquiryListing = () => {
           employee_id: inquiry?.inquiry?.customer?.employee_id || "",
           method: inquiry?.inquiry?.method,
           name:
-            inquiry?.inquiry?.customer?.first_name +
+            inquiry?.inquiry?.customer?.last_name +
             " " +
-            inquiry?.inquiry?.customer?.last_name,
+            inquiry?.inquiry?.customer?.first_name,
           property_name: inquiry?.inquiry?.property?.name,
           type: inquiry?.inquiry?.type,
           content: inquiry?.inquiry?.summary,

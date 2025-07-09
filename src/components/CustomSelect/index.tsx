@@ -73,7 +73,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                 },
               },
               "& .MuiInputBase-input": {
-                color: "#989898", // Ensures the selected value color
+                color: "#3e3e3e", // 選択後は通常の文字色
               },
             }}
           >

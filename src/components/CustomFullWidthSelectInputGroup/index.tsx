@@ -114,12 +114,22 @@ const CustomFullWidthSelectInputGroup: React.FC<
                   "&:hover": {
                     backgroundColor: readonly ? "#F5F5F5" : "transparent", // disable background hover
                   },
+                  "&.Mui-disabled": {
+                    backgroundColor: "#F5F5F5 !important",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#D9D9D9 !important",
+                    },
+                  },
                   ".MuiSelect-icon": {
                     fontSize: "14px",
-                    display: readonly ? "none" : "block", // Hide dropdown arrow when readonly
+                    display: readonly ? "none" : disabled ? "none" : "block", // Hide dropdown arrow when readonly or disabled
                   },
                   "& .MuiSelect-select": {
-                    color: readonly ? "#666666" : "inherit", // Muted text color when readonly
+                    color: readonly ? "#3e3e3e" : disabled ? "#3e3e3e" : "inherit", // Unified text color when readonly or disabled
+                  },
+                  "& .MuiSelect-select.Mui-disabled": {
+                    color: "#3e3e3e !important",
+                    WebkitTextFillColor: "#3e3e3e !important",
                   },
                 }}
               >

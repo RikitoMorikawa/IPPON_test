@@ -64,7 +64,7 @@ const CardTab: React.FC = () => {
       customer_id: inquiry?.inquiry?.customer?.id || '', // ADD THIS LINE - This was missing!
       method: inquiry?.inquiry?.method,
       employee_id: inquiry?.inquiry?.customer?.employee_id || '',
-      name: inquiry.inquiry?.customer?.first_name + ' ' + inquiry?.inquiry?.customer?.last_name,
+      name: inquiry.inquiry?.customer?.last_name + ' ' + inquiry?.inquiry?.customer?.first_name,
       property_name: inquiry?.inquiry?.property?.name,
       type: inquiry?.inquiry?.type,
       content: inquiry?.inquiry?.summary,

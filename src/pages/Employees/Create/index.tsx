@@ -31,16 +31,16 @@ const CreateEmployee = ({ openModal, setOpenModal, onCreateSuccess }: any) => {
   const handleCancelClick = () => setOpenModal(false);
   const isMobile = useMediaQuery('(max-width:600px)');
   const onSubmit = (data: any) => {
-    const payload = {
-      client_id: clientId,
-      // registrant_id: '987654321',
-      role: data.role,
-      family_name: data.lastName,
-      first_name: data.firstName,
-      family_name_kana: data.furiLastName,
-      first_name_kana: data.furiFirstName,
-      mail_address: data.email,
-    };
+            const payload = {
+            client_id: clientId,
+            // registrant_id: '987654321',
+            role: data.role,
+            last_name: data.lastName,
+            first_name: data.firstName,
+            last_name_kana: data.furiLastName,
+            first_name_kana: data.furiFirstName,
+            mail_address: data.email,
+        };
     setOpenModal(false);
     createEmployeeData(payload);
 
@@ -81,8 +81,8 @@ const CreateEmployee = ({ openModal, setOpenModal, onCreateSuccess }: any) => {
                 label='氏名'
                 firstName='firstName'
                 lastName='lastName'
-                placeholderOne='氏'
-                placeholderTwo='名'
+                placeholderOne='名'
+                placeholderTwo='氏'
                 register={register}
                 errors={errors}
                 isRequired
@@ -93,8 +93,8 @@ const CreateEmployee = ({ openModal, setOpenModal, onCreateSuccess }: any) => {
                 label='フリガナ'
                 firstName='furiFirstName'
                 lastName='furiLastName'
-                placeholderOne='ミョウジ'
-                placeholderTwo='ナマエ'
+                placeholderOne='ナマエ'
+                placeholderTwo='ミョウジ'
                 register={register}
                 errors={errors}
                 isModalInput={true}

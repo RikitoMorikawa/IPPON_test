@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Add } from "@mui/icons-material";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Table from "../../../components/Table";
+import TableMobile from "../../../components/TableMobile";
+import { useTheme, useMediaQuery } from "@mui/material";
 import SectionTitle from "../../../components/SectionTitle";
 import CustomButton from "../../../components/CustomButton";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,6 +37,8 @@ const PropertiesInquiryListing = () => {
   const { data: propertiesInquiriesData, loading } = useSelector(
     (state: any) => state.propertiesInquiries.searched
   );
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { property_id } = useParams();
   const [itemCounts, setItemCounts] = useState<any>([]);
   const [dateLabels, setDateLabels] = useState<string[]>([]);
@@ -376,7 +380,7 @@ const PropertiesInquiryListing = () => {
   const employeeOptions =
     employeeNames?.map((employee: any) => ({
       value: employee.id,
-      label: employee.first_name + " " + employee.family_name,
+      label: employee.last_name + " " + employee.first_name,
     })) || [];
 
   const handleManagerChange = (id: string, newManager: string) => {
@@ -574,13 +578,23 @@ const PropertiesInquiryListing = () => {
           />
         </Box>
       </Stack>
-      <Table
-        isLoading={loading}
-        rows={inquiryData}
-        columns={inquiryColumns}
-        pagination={pagination}
-        onPageChange={handlePageChange}
-      />
+      {isMobile ? (
+        <TableMobile
+          isLoading={loading}
+          rows={inquiryData}
+          columns={inquiryColumns}
+          pagination={pagination}
+          onPageChange={handlePageChange}
+        />
+      ) : (
+        <Table
+          isLoading={loading}
+          rows={inquiryData}
+          columns={inquiryColumns}
+          pagination={pagination}
+          onPageChange={handlePageChange}
+        />
+      )}
       {toasts}
     </Box>
   );
