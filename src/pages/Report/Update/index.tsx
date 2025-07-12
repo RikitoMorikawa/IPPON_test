@@ -1,4 +1,11 @@
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { 
+  Box, 
+  Divider, 
+  Grid, 
+  Typography, 
+  useMediaQuery, 
+  useTheme 
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router";
@@ -19,6 +26,8 @@ const ReportUpdate = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const openModal = () => setIsConfirmOpen(true);
   const closeModal = () => setIsConfirmOpen(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const {
     register,
     control,
@@ -29,29 +38,12 @@ const ReportUpdate = () => {
     mode: "onChange", // This enables validation on change
   });
 
-  const [customerData] = useState([
-    {
-      date: "2025-05-15",
-      title: "初回問い合わせ",
-      customer_name: "山田太郎",
-      category: "問い合わせ",
-      content: "物件の内見を希望。土日の予定を確認。",
-    },
-    {
-      date: "2025-05-18",
-      title: "内見実施",
-      customer_name: "山田太郎",
-      category: "内見",
-      content: "キッチンのリフォームについて質問あり。見積もり依頼。",
-    },
-    {
-      date: "2025-05-20",
-      title: "見積もり提示",
-      customer_name: "佐藤花子",
-      category: "商談",
-      content: "リフォーム込みの提案。検討中とのこと。",
-    },
-  ]);
+  const [customerData, setCustomerData] = useState<any[]>([]);
+
+  // Handle customer data changes
+  const handleCustomerDataChange = (newData: any[]) => {
+    setCustomerData(newData);
+  };
 
   const area = [
     { value: "01", label: "北海道" },
@@ -120,6 +112,7 @@ const ReportUpdate = () => {
       investigation: data.investigation,
       negotiation: data.negotiation,
       owner_count: data.owner_count,
+      customer_interactions: customerData,
     };
     createInquiryData(payload);
   };
@@ -135,14 +128,18 @@ const ReportUpdate = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box pt={3}>
+        <Box className={`report ${isMobile ? "sp" : ""}`} pt={{ lg: 3, xs: 1 }}>
           <SectionTitle title='新規報告書' addBorder={false} />
 
           <Divider sx={{ borderColor: "#D9D9D9", py: 0.5 }} />
 
           <Box
             className='reportFormInputsGroup'
-            sx={{ my: 2, maxWidth: "100%", pl: 7 }}>
+            sx={{ 
+              my: { xs: "10px", sm: "16px" }, 
+              maxWidth: "100%", 
+              pl: { xs: "0", sm: 7 } 
+            }}>
             <CustomFullWidthInputGroup
               label='報告書名'
               name='name'
@@ -218,19 +215,26 @@ const ReportUpdate = () => {
             />
           </Box>
         </Box>
-        <Box sx={{ mt: 2, mb: 5, maxWidth: "100%", pl: 12 }}>
+        <Box sx={{ mt: 2, mb: 5, maxWidth: "100%", pl: { lg: 7.5, xs: 0 } }}>
           <Box className='inputGroupWrapper flexRow'>
             <Typography
-              className={`inputLabel`}
+              className={isMobile ? "" : `inputLabel`}
               sx={{
-                width: "100px",
-                alignSelf: "center", // Align to top if multiline
-                paddingTop: "0", // Add padding top if multiline
+                width: { xs: "100%", md: "100px" },
+                alignSelf: "center",
+                paddingTop: "0",
+                fontSize: { xs: "10px", md: "14px" },
+                fontWeight: { xs: 700, md: 400 },
+                mb: { xs: 2, md: 0 },
+                whiteSpace: "nowrap",
               }}>
               顧客対応内容
             </Typography>
-            <MiniTableList data={customerData} />
           </Box>
+                     <MiniTableList 
+             data={customerData} 
+             onChange={handleCustomerDataChange}
+           />
         </Box>
         <Box
           sx={{

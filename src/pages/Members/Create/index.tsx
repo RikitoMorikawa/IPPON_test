@@ -1,7 +1,6 @@
 import CustomModal from '../../../components/CustomModal'
 import { useForm } from 'react-hook-form';
 import { Box } from '@mui/material';
-import Cookies from 'js-cookie';
 import CustomTwoColInputGroup from '../../../components/CustomTwoColInputGroup';
 import CustomFullWidthInputGroup from '../../../components/CustomFullWidthInputGroup';
 import CustomButton from '../../../components/CustomButton';
@@ -11,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../store';
 import { createMember } from '../../../store/membersSlice';
 import { useToast } from '../../../components/Toastify';
+import { getClientID } from '../../../utils/authUtils';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const CreateMember = ({openModal,setOpenModal,onCreateSuccess}:any) => {
@@ -18,7 +18,7 @@ const CreateMember = ({openModal,setOpenModal,onCreateSuccess}:any) => {
         defaultValues: { role: 'general' }
     });
     const { addToast, toasts } = useToast();
-    const clientId = Cookies.get('clientID');
+    const clientId = getClientID();
     const dispatch = useDispatch<AppDispatch>();
     const handleCloseModal = () => setOpenModal(false);
     const handleCancelClick = () => setOpenModal(false);

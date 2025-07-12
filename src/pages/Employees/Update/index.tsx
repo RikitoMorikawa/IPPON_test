@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Box, useMediaQuery } from "@mui/material";
-import Cookies from "js-cookie";
 import CustomTwoColInputGroup from "../../../components/CustomTwoColInputGroup";
 import CustomFullWidthInputGroup from "../../../components/CustomFullWidthInputGroup";
 import CustomButton from "../../../components/CustomButton";
@@ -16,6 +15,7 @@ import CustomFullWidthCheckboxGroup from "../../../components/CustomFullWidthChe
 import { useEffect, useState } from "react";
 import SectionTitle from "../../../components/SectionTitle";
 import { useNavigate, useParams } from "react-router";
+import { getRole, getClientID, getEmployeeID } from "../../../utils/authUtils";
 
 const EmployeeUpdate = () => {
   const {
@@ -31,11 +31,11 @@ const EmployeeUpdate = () => {
   const { addToast, toasts } = useToast();
   const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState<boolean>(false);
-  const clientId = Cookies.get("clientID");
+  const clientId = getClientID();
   const employeeId = useParams().employee_id;
   const isMobile = useMediaQuery('(max-width:600px)');
   const [originalValues, setOriginalValues] = useState<any>(null);
-  const userRole = Cookies.get("role");
+  const userRole = getRole();
 
   const { data: employeeData } = useSelector(
     (state: any) => state.employees.detailed
@@ -97,12 +97,10 @@ const EmployeeUpdate = () => {
       );
 
       if (updateDetailedEmployee.fulfilled.match(updateResult)) {
-        // Update cookie role if the updated employee is the current logged-in user
-        const currentEmployeeId = Cookies.get("employeeID");
+        // Note: Role updates will take effect on next login with new JWT token
+        const currentEmployeeId = getEmployeeID();
         if (String(id) === String(currentEmployeeId)) {
-          const updatedEmployeeData = updateResult.payload;
-          const newRole = updatedEmployeeData?.is_admin ? "admin" : "general";
-          Cookies.set("role", newRole, { expires: 1 });
+          // Current user's role was updated, but will be reflected in next JWT token
         }
 
         addToast({

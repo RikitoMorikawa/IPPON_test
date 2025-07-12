@@ -12,8 +12,8 @@ import {
   Divider
 } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
-import Cookies from 'js-cookie';
 import { TableProps } from '../../types';
+import { getRole } from '../../utils/authUtils';
 
 interface PaginationInfo {
   total: number;
@@ -89,7 +89,7 @@ const TableMobile: React.FC<MobileTableProps> = ({
   handlePropertyClick // Accept the click handler
 }) => {
   const [localPage, setLocalPage] = useState(1);
-  const userRole = Cookies.get('role');
+  const userRole = getRole();
 
   const handleSelectionChange = (rowId: number, checked: boolean) => {
     if (!onRowSelection) return;

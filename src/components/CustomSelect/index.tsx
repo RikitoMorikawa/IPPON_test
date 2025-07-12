@@ -3,7 +3,12 @@ import { Controller } from "react-hook-form";
 import { CustomSelectProps } from "../../types";
 import { DropDownArrowIcon } from "../../common/icons";
 
-const CustomSelect: React.FC<CustomSelectProps> = ({
+// labelPositionを追加（デフォルトは'left'）
+interface CustomSelectWithLabelPositionProps extends CustomSelectProps {
+  labelPosition?: 'top' | 'left';
+}
+
+const CustomSelect: React.FC<CustomSelectWithLabelPositionProps> = ({
   label,
   name,
   control,
@@ -12,10 +17,17 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   defaultValue,
   width = "124px",
   XsWidth = "90px",
+  labelPosition = 'left',
   ...props
 }) => {
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: { lg: 2, xs: 1 } }}>
+    <Box
+      sx={
+        labelPosition === 'top'
+          ? { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 0.5 }
+          : { display: "flex", alignItems: "center", gap: { lg: 2, xs: 1 } }
+      }
+    >
       {label && (
         <Typography
           variant="body2"
@@ -23,6 +35,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
             fontSize: { lg: "12px", xs: "10px" },
             fontWeight: 700,
             color: "#3e3e3e",
+            mb: labelPosition === 'top' ? 0.5 : 0,
           }}
         >
           {label}

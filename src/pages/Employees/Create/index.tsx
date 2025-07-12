@@ -1,7 +1,6 @@
 import CustomModal from "../../../components/CustomModal";
 import { useForm } from "react-hook-form";
 import { Box, useMediaQuery } from "@mui/material";
-import Cookies from "js-cookie";
 import CustomTwoColInputGroup from "../../../components/CustomTwoColInputGroup";
 import CustomFullWidthInputGroup from "../../../components/CustomFullWidthInputGroup";
 import CustomButton from "../../../components/CustomButton";
@@ -11,6 +10,7 @@ import { AppDispatch } from "../../../store";
 import { createEmployee } from "../../../store/employeeSlice";
 import { useToast } from "../../../components/Toastify";
 import CustomFullWidthCheckboxGroup from "../../../components/CustomFullWidthCheckboxInputGroup";
+import { getClientID } from "../../../utils/authUtils";
  
 
 const CreateEmployee = ({ openModal, setOpenModal, onCreateSuccess }: any) => {
@@ -25,7 +25,7 @@ const CreateEmployee = ({ openModal, setOpenModal, onCreateSuccess }: any) => {
     defaultValues: { role: "general" },
   });
   const { addToast, toasts } = useToast();
-  const clientId = Cookies.get("clientID");
+  const clientId = getClientID();
   const dispatch = useDispatch<AppDispatch>();
   const handleCloseModal = () => setOpenModal(false);
   const handleCancelClick = () => setOpenModal(false);

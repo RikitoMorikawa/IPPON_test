@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Add, Search } from "@mui/icons-material";
-import Cookies from 'js-cookie';
 import {
   Box,
   Stack,
@@ -19,6 +18,7 @@ import { formatDateTime } from "../../../common/formatDate";
 import CreateMember from "../Create";
 import { ButtonDeleteIcon } from "../../../common/icons";
 import { useNavigate } from "react-router";
+import { getRole, getClientID } from "../../../utils/authUtils";
  
 
 const MembersListing = () => {
@@ -34,8 +34,8 @@ const MembersListing = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {register, handleSubmit} = useForm();
-  const clientId = Cookies.get('clientID')
-  const role = Cookies.get('role')
+  const clientId = getClientID()
+  const role = getRole()
   const { data: membersData, loading: isSearchLoading } = useSelector(
     (state: any) => state.members.searched,
   );

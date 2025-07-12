@@ -1,7 +1,6 @@
 import { Box } from '@mui/material'
 import SectionTitle from '../../../components/SectionTitle'
 import { useForm } from 'react-hook-form';
-import Cookies from 'js-cookie';
 import CustomTwoColInputGroup from '../../../components/CustomTwoColInputGroup';
 import CustomFullWidthInputGroup from '../../../components/CustomFullWidthInputGroup';
 import { useEffect, useState, useCallback } from 'react';
@@ -14,6 +13,7 @@ import { createMemberProfile, deleteMemberProfileImage, fetchDetailedMember, sen
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { useToast } from '../../../components/Toastify';
 import CustomCheckbox from '../../../components/CustomCheckbox';
+import { getClientID, getEmployeeID, getRole } from '../../../utils/authUtils';
  
 
 const readFileAsBase64 = (
@@ -44,9 +44,9 @@ const MemberUpdate = () => {
   const [imageInitialValue, setImageInitialValue] = useState<any>([]);
   const [componentKey, setComponentKey] = useState<string>(''); // Add component key for forcing re-mount
   
-  const clientId = Cookies.get('clientID')
-  const employeeId = Cookies.get('employeeID')
-  const role = Cookies.get('role')
+  const clientId = getClientID()
+  const employeeId = getEmployeeID()
+  const role = getRole()
   const navigate = useNavigate();
   const {data: detailMemberData} = useSelector((state: any)=>state.members.detailed);
   const {
@@ -155,7 +155,7 @@ const MemberUpdate = () => {
       if(member_id && member_id !==undefined){
         id = member_id;
         updateResult = await dispatch(updateDetailedMember({id,payload}));
-      }else if(isLoginUserProfilePage){
+      }else if(isLoginUserProfilePage && employeeId){
         id= employeeId;
         updateResult = await dispatch(updateDetailedMember({id,payload}));
       }
@@ -190,7 +190,7 @@ const MemberUpdate = () => {
         const id = member_id;
         await dispatch(fetchDetailedMember(id));
       }
-      else if(isLoginUserProfilePage){
+      else if(isLoginUserProfilePage && employeeId){
         const id = employeeId;
         await dispatch(fetchDetailedMember(id));
       }
@@ -262,7 +262,7 @@ const MemberUpdate = () => {
     
     // Check if user is allowed to edit this profile
     const isAdmin = role === 'admin';
-    const isOwnProfile = isLoginUserProfilePage || (String(detailMemberData?.member_id) === String(employeeId));
+    const isOwnProfile = isLoginUserProfilePage || (String(detailMemberData?.member_id) === String(employeeId || ''));
     
     // Set edit permission based on role and profile ownership
     setIsEdit(isAdmin || isOwnProfile);
@@ -331,7 +331,7 @@ const MemberUpdate = () => {
 
       if (member_id !== undefined && member_id !== null) {
         formData.append("member_id", String(member_id));
-      }else if(isLoginUserProfilePage){
+      }else if(isLoginUserProfilePage && employeeId){
         formData.append("member_id", String(employeeId));
       }
 
@@ -371,7 +371,7 @@ const MemberUpdate = () => {
              <ImagesUploader
                 key={componentKey}
                 name="image_url"
-                memberId={member_id || employeeId}
+                memberId={member_id || employeeId || undefined}
                 initialImages={imageInitialValue}
                 setValue={setValue}
                 register={register}

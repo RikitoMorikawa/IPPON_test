@@ -42,6 +42,11 @@ const ReportCreate: React.FC<ReportCreateProps> = ({
   // const [propertyId, setPropertyId] = useState(false);
   // const [reportName, setReportName] = useState(false);
   const [customerInteractions, setCustomerInteractions] = useState<any[]>([]);
+
+  // Handle customer interactions changes
+  const handleCustomerInteractionsChange = (newData: any[]) => {
+    setCustomerInteractions(newData);
+  };
   const [saveType, setSaveType] = useState<"draft" | "completed">("completed");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -436,34 +441,28 @@ const ReportCreate: React.FC<ReportCreateProps> = ({
             />
           </Box>
         </Box>
-        <Box sx={{ mt: 2, mb: 5, maxWidth: "100%", pl: { lg: 8.2, xs: 0 } }}>
-          <Typography
-            sx={{
-              alignSelf: "center",
-              display: { lg: "none", xs: "block" },
-              paddingTop: "0",
-              whiteSpace: "nowrap",
-              fontSize: "10px",
-              fontWeight: 700,
-              mb: 2,
-            }}
-          >
-            顧客対応内容
-          </Typography>
+        <Box sx={{ mt: 2, mb: 5, maxWidth: "100%", pl: { lg: 7.5, xs: 0 } }}>
           <Box className="inputGroupWrapper flexRow">
             <Typography
               className={isMobile ? "" : `inputLabel`}
               sx={{
-                width: "100px",
-                display: { lg: "block", xs: "none" },
+                width: { xs: "100%", md: "100px" },
                 alignSelf: "center",
                 paddingTop: "0",
+                fontSize: { xs: "10px", md: "14px" },
+                fontWeight: { xs: 700, md: 400 },
+                mb: { xs: 2, md: 0 },
+                whiteSpace: "nowrap",
               }}
             >
               顧客対応内容
             </Typography>
-            <MiniTableList data={customerInteractions} />
+          
           </Box>
+                     <MiniTableList 
+             data={customerInteractions} 
+             onChange={handleCustomerInteractionsChange}
+           />
         </Box>
         <Box
           sx={{

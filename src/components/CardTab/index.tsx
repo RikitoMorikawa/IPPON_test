@@ -62,6 +62,7 @@ const CardTab: React.FC = () => {
     return data.map((inquiry: any, index: number) => ({
       id: inquiry?.inquiry?.id || index,
       customer_id: inquiry?.inquiry?.customer?.id || '', // ADD THIS LINE - This was missing!
+      property_id: inquiry?.inquiry?.property?.id || '',
       method: inquiry?.inquiry?.method,
       employee_id: inquiry?.inquiry?.customer?.employee_id || '',
       name: inquiry.inquiry?.customer?.last_name + ' ' + inquiry?.inquiry?.customer?.first_name,

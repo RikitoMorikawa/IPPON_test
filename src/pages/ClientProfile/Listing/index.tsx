@@ -18,8 +18,8 @@ import {
 } from "../../../store/clientSlice";
 import { AppDispatch } from "../../../store";
 import { useToast } from "../../../components/Toastify";
-import Cookies from "js-cookie";
 import PostalCodeAutoAddressInput from "../../../components/PostalCodeAutoAddressInput";
+import { getRole, getClientID } from "../../../utils/authUtils";
 
 const ClientProfile = () => {
   const [, setIsFormValid] = useState(false);
@@ -31,8 +31,8 @@ const ClientProfile = () => {
     formState: { errors, isValid, isDirty },
   } = useForm();
 
-  const client_id = Cookies.get("clientID");
-  const userRole = Cookies.get("role");
+  const client_id = getClientID();
+  const userRole = getRole();
   const isAdmin = userRole === "admin";
   const leftInputContainerWidth = "338px";
   
@@ -129,11 +129,7 @@ const ClientProfile = () => {
       }
 
       if (updateDetailedClient.fulfilled.match(updateResult)) {
-        // Update clientName cookie for the current logged-in client
-        const updatedClientData = updateResult.payload;
-        if (updatedClientData?.client_name) {
-          Cookies.set("clientName", updatedClientData.client_name, { expires: 1 });
-        }
+        // Note: Client name will be updated in the next JWT token on re-login
         // Note: role should be managed server-side for security reasons
         
         addToast({
@@ -153,11 +149,11 @@ const ClientProfile = () => {
 
   const fetchDetailClientProfile = async () => {
     try {
-      if (client_id && client_id !== undefined) {
+      if (client_id && client_id !== null) {
         const id = client_id;
         await dispatch(fetchDetailedClient(id));
       } else {
-        console.error("❌ No client_id found in cookies");
+        console.error("❌ No client_id found in JWT token");
       }
     } catch (err) {
       console.error("❌ Error fetching client:", err);

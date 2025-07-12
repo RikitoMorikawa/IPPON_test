@@ -75,6 +75,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       disableElevation
       sx={{
         ...(isClearButton ? styled.clearButton : {}),
+        textTransform: 'none', // Preserve original case
         ...sx,
         "&.Mui-disabled": {
           backgroundColor: isClearButton

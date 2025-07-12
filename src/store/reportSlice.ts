@@ -162,6 +162,79 @@ export const deleteReport = createAsyncThunk<any, any>(
   }
 );
 
+// Delete multiple reports
+export const deleteReports = createAsyncThunk<any, any>(
+  "reports/deleteReports",
+  async (reportIds: string[], { rejectWithValue }) => {
+    try {
+      const result = await ipponApi.delete(`${BaseURL}/api/v1/reports`, {
+        data: { report_ids: reportIds },
+      });
+      return result.data.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || "An error occurred during deleting reports"
+      );
+    }
+  }
+);
+
+// Download Excel file for multiple reports
+export const downloadReportsExcel = createAsyncThunk<any, any>(
+  "reports/downloadReportsExcel",
+  async (reportIds: string[], { rejectWithValue }) => {
+    try {
+      const result = await ipponApi.post(
+        `${BaseURL}/api/v1/reports/excel-download`,
+        { report_ids: reportIds },
+        { responseType: "blob" }
+      );
+
+      // Helper function to extract filename from Content-Disposition header
+      const getFilenameFromHeaders = (headers: any): string => {
+        const contentDisposition =
+          headers["content-disposition"] || headers["Content-Disposition"];
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(
+            /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+          );
+          if (filenameMatch && filenameMatch[1]) {
+            return filenameMatch[1].replace(/['"]/g, "");
+          }
+        }
+        return `報告書一覧_${new Date().toISOString().split("T")[0]}.xlsx`;
+      };
+
+      // Helper function to download file
+      const downloadFile = (blob: Blob, filename: string) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      };
+
+      // Download the file immediately
+      const filename = getFilenameFromHeaders(result.headers);
+      downloadFile(result.data, filename);
+
+      // Return only serializable metadata
+      return {
+        success: true,
+        filename: filename,
+        message: "Excel file downloaded successfully",
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || "An error occurred during downloading Excel file"
+      );
+    }
+  }
+);
+
 export const fetchInquiriesForReport = createAsyncThunk<any, any>(
   "reports/fetchInquiriesForReport",
   async (
@@ -197,6 +270,8 @@ export const setupReportBatch = createAsyncThunk<any, any>(
     payload: {
       property_id: string;
       start_date: string;
+      weekday: string;
+      executionTime: string;
       auto_create_period: string;
       auto_generate: boolean;
     },
@@ -207,6 +282,8 @@ export const setupReportBatch = createAsyncThunk<any, any>(
         `${BaseURL}/api/v1/properties/${payload.property_id}/reports/batch`,
         {
           start_date: payload.start_date,
+          weekday: payload.weekday,
+          executionTime: payload.executionTime,
           auto_create_period: payload.auto_create_period,
           auto_generate: payload.auto_generate,
         }
@@ -251,6 +328,8 @@ export const updateBatchStatus = createAsyncThunk<any, any>(
       start_date?: string;
       auto_create_period?: string;
       auto_generate: boolean;
+      weekday?: string;
+      executionTime?: string;
     },
     { rejectWithValue }
   ) => {
@@ -267,6 +346,28 @@ export const updateBatchStatus = createAsyncThunk<any, any>(
       return rejectWithValue(
         error.response?.data ||
           "An error occurred during updating batch status"
+      );
+    }
+  }
+);
+
+export const deleteBatchStatus = createAsyncThunk<any, any>(
+  "reports/deleteBatchStatus",
+  async (
+    payload: {
+      batch_id: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await ipponApi.delete(
+        `${BaseURL}/api/v1/properties/batch-status/${payload.batch_id}`
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data ||
+          "An error occurred during deleting batch status"
       );
     }
   }
@@ -429,6 +530,48 @@ export const reportsSlice = createSlice({
     builder.addCase(updateBatchStatus.rejected, (state) => {
       state.batchStatus.loading = false;
       state.batchStatus.error = true;
+    });
+    // deleteBatchStatus handlers
+    builder.addCase(deleteBatchStatus.fulfilled, (state) => {
+      state.batchStatus.data = null;
+      state.batchStatus.loading = false;
+      state.batchStatus.error = false;
+    });
+    builder.addCase(deleteBatchStatus.pending, (state) => {
+      state.batchStatus.loading = true;
+      state.batchStatus.error = false;
+    });
+    builder.addCase(deleteBatchStatus.rejected, (state) => {
+      state.batchStatus.loading = false;
+      state.batchStatus.error = true;
+    });
+    // deleteReports handlers
+    builder.addCase(deleteReports.fulfilled, (state) => {
+      // Refresh the searched data by triggering a reload flag
+      state.searched.loading = false;
+      state.searched.error = false;
+    });
+    builder.addCase(deleteReports.pending, (state) => {
+      state.searched.loading = true;
+      state.searched.error = false;
+    });
+    builder.addCase(deleteReports.rejected, (state) => {
+      state.searched.loading = false;
+      state.searched.error = true;
+    });
+    // downloadReportsExcel handlers
+    builder.addCase(downloadReportsExcel.fulfilled, (state) => {
+      // File download completed successfully
+      state.searched.loading = false;
+      state.searched.error = false;
+    });
+    builder.addCase(downloadReportsExcel.pending, (state) => {
+      state.searched.loading = true;
+      state.searched.error = false;
+    });
+    builder.addCase(downloadReportsExcel.rejected, (state) => {
+      state.searched.loading = false;
+      state.searched.error = true;
     });
   },
 });

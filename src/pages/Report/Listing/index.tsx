@@ -1,22 +1,30 @@
 // import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { Box, Stack, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+
 import { formatDateTime } from "../../../common/formatDate";
 import SectionTitle from "../../../components/SectionTitle";
 import PerPageSelectBox from "../../../components/PerPageSelectBox";
 import Table from "../../../components/Table";
+import TableMobile from "../../../components/TableMobile";
+import CustomButton from "../../../components/CustomButton";
+import CustomModal from "../../../components/CustomModal";
 import ReportSearch from "./ReportSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../store";
 import {
   searchReports,
   fetchPropertyReports,
+  deleteReports,
+  downloadReportsExcel,
 } from "../../../store/reportSlice";
 import { PaginationInfo } from "../../../types";
 import { useTheme, useMediaQuery } from "@mui/material";
-import TableMobile from "../../../components/TableMobile";
+import { getRole } from "../../../utils/authUtils";
+import { ButtonDeleteIcon } from "../../../common/icons";
+import { useToast } from "../../../components/Toastify";
+
 // Updated interface to match ReportSearch component
 interface SearchParams {
   period?: string;
@@ -45,6 +53,10 @@ const ReportListing: React.FC<ReportListingProps> = ({
   property_id,
 }) => {
   const [perPage, setPerPage] = useState<number>(10);
+  const [selectedIds, setSelectedIds] = useState<any[]>([]);
+  const [isDeletButtonActive, setIsDeletButtonActive] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const { addToast, toasts } = useToast();
 
   const handlePerPageChange = (value: number) => {
     setPerPage(value);
@@ -113,7 +125,7 @@ const ReportListing: React.FC<ReportListingProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // const navigate = useNavigate();
-  const role = Cookies.get("role");
+  const role = getRole();
   const { data: reportData } = useSelector(
     (state: any) => state.reports.searched
   );
@@ -223,6 +235,74 @@ const ReportListing: React.FC<ReportListingProps> = ({
     }
   }, [reportData]);
 
+  const handleRowSelection = (selectedRows: any[]) => {
+    setSelectedIds(selectedRows);
+    setIsDeletButtonActive(selectedRows.length > 0);
+  };
+
+  const clearRowSelection = () => {
+    setSelectedIds([]);
+    setIsDeletButtonActive(false);
+  };
+
+  const handleOpenDeleteModal = () => setOpenDeleteModal(true);
+
+  const handleDelete = async () => {
+    setOpenDeleteModal(false);
+    try {
+      const deleteResult = await dispatch(deleteReports(selectedIds));
+      
+      if (deleteReports.fulfilled.match(deleteResult)) {
+        clearRowSelection();
+        // 削除後にデータを再取得
+        fetchReport(searchParams, pagination.page, pagination.limit);
+        addToast({
+          message: "削除しました!",
+          type: "deleted",
+        });
+      } else if (deleteReports.rejected.match(deleteResult)) {
+        const response = deleteResult.payload as any;
+        const errorMessage = response.message || "削除に失敗しました";
+        addToast({
+          message: errorMessage,
+          type: "error",
+        });
+      }
+    } catch (err) {
+      console.error("Error deleting reports:", err);
+      addToast({
+        message: "削除に失敗しました",
+        type: "error",
+      });
+    }
+  };
+
+  const handleExcelDownload = async () => {
+    try {
+      const downloadResult = await dispatch(downloadReportsExcel(selectedIds));
+      
+      if (downloadReportsExcel.fulfilled.match(downloadResult)) {
+        addToast({
+          message: "エクセルファイルをダウンロードしました!",
+          type: "success",
+        });
+      } else if (downloadReportsExcel.rejected.match(downloadResult)) {
+        const response = downloadResult.payload as any;
+        const errorMessage = response.message || "ダウンロードに失敗しました";
+        addToast({
+          message: errorMessage,
+          type: "error",
+        });
+      }
+    } catch (err) {
+      console.error("Error downloading excel:", err);
+      addToast({
+        message: "ダウンロードに失敗しました",
+        type: "error",
+      });
+    }
+  };
+
   return (
     <Box>
       <Box>
@@ -240,36 +320,90 @@ const ReportListing: React.FC<ReportListingProps> = ({
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ mb: 2.5 }}
+          sx={{ mb: 1 }}
         >
           <Box>
             <SectionTitle title={"報告書一覧"} addBorder={false} />
           </Box>
 
           {role === "admin" && (
-            <Stack
-              direction={"row"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              gap={1}
-            >
-              <Box>
-                <Typography
-                  sx={{ fontWeight: "700", color: "#3e3e3e", fontSize: "12px" }}
-                >
-                  表示件数
-                </Typography>
-              </Box>
-              <Box>
-                <PerPageSelectBox
-                  value={perPage}
-                  onChange={handlePerPageChange}
-                />
-              </Box>
+            <Stack direction="row" spacing={1}>
+              <CustomButton
+                label="Excelダウンロード"
+                type="button"
+                sx={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                onClick={handleExcelDownload}
+                className={`${!isDeletButtonActive ? "disabled" : ""}`}
+              />
+              <CustomButton
+                label="削除"
+                type="button"
+                sx={{
+                  width: "65px",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                startIcon={<ButtonDeleteIcon />}
+                onClick={handleOpenDeleteModal}
+                className={`delete ${
+                  isDeletButtonActive ? "active" : "disabled"
+                }`}
+              />
             </Stack>
           )}
         </Stack>
+
+        {role === "admin" && (
+          <Stack
+            direction={"row"}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+            gap={1}
+            sx={{ mb: 1.5 }}
+          >
+            <Box>
+              <Typography
+                sx={{ fontWeight: "700", color: "#3e3e3e", fontSize: "12px" }}
+              >
+                表示件数
+              </Typography>
+            </Box>
+            <Box>
+              <PerPageSelectBox
+                value={perPage}
+                onChange={handlePerPageChange}
+              />
+            </Box>
+          </Stack>
+        )}
       </Box>
+
+      {/* Delete Confirmation Modal */}
+      <CustomModal
+        title="削除の確認"
+        openModal={openDeleteModal}
+        handleCloseModal={() => setOpenDeleteModal(false)}
+        bodyText="選択した報告書を削除してよろしいですか？"
+      >
+        <Box sx={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+          <CustomButton
+            label="削除"
+            onClick={handleDelete}
+            buttonCategory="delete"
+          />
+          <CustomButton
+            label="戻る"
+            type="button"
+            onClick={() => setOpenDeleteModal(false)}
+          />
+        </Box>
+      </CustomModal>
+
       {isMobile ? (
         <TableMobile
           isLoading={isLoading}
@@ -277,17 +411,23 @@ const ReportListing: React.FC<ReportListingProps> = ({
           columns={reportColumns}
           pagination={pagination}
           onPageChange={handlePageChange}
+          checkbox={true}
+          onRowSelection={handleRowSelection}
+          selectedIds={selectedIds}
         />
       ) : (
         <Table
           isLoading={isLoading}
           rows={report}
           columns={reportColumns}
-          checkbox={false}
+          checkbox={true}
           pagination={pagination}
           onPageChange={handlePageChange}
+          onRowSelection={handleRowSelection}
+          selectedIds={selectedIds}
         />
       )}
+      {toasts}
     </Box>
   );
 };

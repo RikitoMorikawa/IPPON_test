@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { createInquiry } from "../../../store/inquirySlice";
@@ -32,6 +31,7 @@ import {
   type InquiryMethod,
 } from "../../../utils/notificationUtils";
 import { RequireIcon } from "../../../common/icons";
+import { getClientID } from "../../../utils/authUtils";
 
 interface FormData {
   // Personal Information
@@ -64,7 +64,7 @@ const InquiryCreate = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { addToast, toasts } = useToast();
-  const clientId = Cookies.get("clientID");
+  const clientId = getClientID();
   const leftInputContainerWidth = "338px";
 
   // Redux state

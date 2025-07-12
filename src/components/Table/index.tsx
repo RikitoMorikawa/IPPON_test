@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Box, keyframes, Pagination } from "@mui/material";
 import { TableProps } from "../../types";
 import "../../common/common.css";
-import Cookies from "js-cookie";
 import {
   TableHeaderDownArrowIcon,
   TableHeaderUpArrowIcon,
 } from "../../common/icons";
+import { getRole } from "../../utils/authUtils";
 
 interface PaginationInfo {
   total: number;
@@ -50,7 +50,7 @@ const Table: React.FC<ExtendedTableProps> = ({
 
   const CustomAscIcon = () => <TableHeaderUpArrowIcon />;
   const CustomDescIcon = () => <TableHeaderDownArrowIcon />;
-  const userRole = Cookies.get("role");
+  const userRole = getRole();
 
   const handleSelectionChange = (newSelectionModel: GridRowSelectionModel) => {
     const selectedRowIds = newSelectionModel as number[];

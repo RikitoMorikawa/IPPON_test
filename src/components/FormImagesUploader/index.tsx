@@ -73,7 +73,12 @@ const FormImagesUploader = memo(
 
     const handleDelete = (imageToDelete:any) => {
       let filteredImages = [];
-      if (imageToDelete?.base64) {
+
+      // 削除対象の判定ロジック
+      if (imageToDelete?.url) {
+        filteredImages = images?.filter((image: any) => getImageUrl(image) !== imageToDelete.url);
+        setDeletedImagePaths((prev: any) => [...prev, imageToDelete.url]);
+      } else if (imageToDelete?.base64) {
         filteredImages = images?.filter(
           (image: any) =>
             image.base64 !== imageToDelete.base64,
@@ -114,16 +119,16 @@ const FormImagesUploader = memo(
       //   setImages([initialImages])
       //   setValue(name, [initialImages]);
       // }
-      if (update) {
+      if (update === "true") {
         if (Array.isArray(initialImages)) {
           if (initialImages.length > 0) {
             setImages(initialImages);
             setValue(name, initialImages);
           } else {
-            // setImages([]);
-            // setValue(name, []);
+            setImages([]);
+            setValue(name, []);
           }
-        } else if (typeof initialImages === 'string' && initialImages.trim() !== '') {
+        } else if (typeof initialImages === "string" && initialImages.trim() !== "") {
           setImages([initialImages]);
           setValue(name, [initialImages]);
         } else {
@@ -145,6 +150,32 @@ const FormImagesUploader = memo(
           'image/jpeg': [],
         },
       });
+
+    // 🔧 画像URL取得の関数
+    function getImageUrl(image: any): string {
+      // public_file_pathが存在する場合
+      if (image?.public_file_path) {
+        return image.public_file_path;
+      }
+      // base64データがURLの場合（S3 URLなど）
+      if (image?.base64 && typeof image.base64 === 'string') {
+        // URLかどうかを判定
+        if (image.base64.startsWith('http://') || image.base64.startsWith('https://')) {
+          return image.base64;
+        }
+        // Base64データの場合
+        if (image.base64.startsWith('data:')) {
+          return image.base64;
+        }
+        // Base64の場合は data: プレフィックスを追加
+        return `data:image/jpeg;base64,${image.base64}`;
+      }
+      // 直接URLの場合
+      if (typeof image === 'string') {
+        return image;
+      }
+      return '';
+    }
 
     const symbolOfAdditionForLargeImage = (
       <svg
@@ -180,8 +211,10 @@ const FormImagesUploader = memo(
       if(filePath !== undefined && typeof filePath === 'string'){
         // const fileName = filePath?.split('/').pop();
         // return fileName.replace(/^\d+-/, '');
-        return filePath.split('/').pop();
+        const fileName = filePath.split("/").pop();
+        return fileName;
       }
+      return filePath;
     }
 
     return (
@@ -192,38 +225,33 @@ const FormImagesUploader = memo(
             // const uniqueKey = image?.path || `${index}-${timestamp}`;
             const uniqueKey =
               image?.public_file_path || image?.base64 || `image-${index}`;
+            // 🔧 画像URLを取得
+            const imageUrl = getImageUrl(image);
+            if (!imageUrl || imageUrl.trim() === "") {
+              return null;
+            }
             return (
               <div className='imageBlock'
                 // key={`${image.URL}-${new Date().toISOString()}}`}
                 key={uniqueKey}
               >
                 <div className='imageWrapper'>
-                  {image?.public_file_path ? (
-                    <img className='dragedImage'
-                      src={image?.public_file_path}
-                      alt={`Selected ${index}`}
-                    />
-                  ) : image?.base64 !== undefined ? (
-                    <img className='dragedImage'
-                      src={image.base64}
-                      alt={`Selected ${index}`}
-                    />
-                  ) : <img className='dragedImage'
-                    src={image}
+                  <img className='dragedImage'
+                    src={imageUrl}
                     alt={`Selected ${index}`}
-                  /> }
+                  />
 
                   <button
                   className='deleteButton'
-                    onClick={() => handleDelete(image)}
+                    onClick={() => handleDelete({ ...image, url: imageUrl })}
                   />
                 </div>
                 {showLabel === 'true' && (
                   <p className='imageTitle'>
                     <span className='imageTitleSpan'>
                       {image?.name
-                        ? `${image.name}`
-                        : image?.base64 !== undefined ? `${extractFileName(image?.base64)}` : `${extractFileName(image)}`}
+                        ? image.name
+                        : extractFileName(imageUrl)}
                     </span>
                   </p>
                 )}

@@ -25,6 +25,9 @@
 .modalBox.otherModal {
   width: 304px;
 }
+.modalBox.mediumModal {
+  width: 400px;
+}
 .modalBox.flexColModal {
   width: 508px;
 }

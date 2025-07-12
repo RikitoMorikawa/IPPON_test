@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import ipponApi from "../config/axios";
 import { AuthState, LoginFormInputs } from "../types";
+import { getClientID } from "../utils/authUtils";
 
 const BaseURL = import.meta.env.VITE_API_URL;
 
@@ -141,10 +142,24 @@ export const changeMemberPasswordByAdmin = createAsyncThunk<any, any>(
   }
 );
 
+export const logoutAPI = createAsyncThunk<any, void>(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const result = await ipponApi.post(`${BaseURL}/api/v1/auth/logout`);
+      return result;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || "An error occurred during logout"
+      );
+    }
+  }
+);
+
 export const changeAdminStatus = createAsyncThunk<any, any>(
   "user/changeAdminStatus",
   async ({ member_id, email, newStatus }, { rejectWithValue }) => {
-    const clientId = Cookies.get("clientID");
+    const clientId = getClientID();
     try {
       const result = await ipponApi.post(
         `${BaseURL}/auth/member-approve?is_approve=${newStatus}`,
@@ -184,7 +199,7 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
+    logoutLocal: (state) => {
       state.loginState.isLoggedIn = false;
       state.user = {
         clientID: "",
@@ -194,11 +209,7 @@ export const authSlice = createSlice({
         token: "",
       };
 
-      // Clear cookies
-      Cookies.remove("clientID");
-      Cookies.remove("clientName");
-      Cookies.remove("employeeID");
-      Cookies.remove("role");
+      // Clear only token cookie
       Cookies.remove("token");
 
       // Clear localStorage and sessionStorage for security
@@ -217,24 +228,10 @@ export const authSlice = createSlice({
       state.loginState.isLoggedIn = true;
       state.loginState.loading = false;
 
-      state.user.clientID = action.payload.data.data.client_id;
-      state.user.clientName = action.payload.data.data.client_name;
-      state.user.employeeID = action.payload.data.data.employee_id;
-      state.user.role = action.payload.data.data.role;
+      // トークンのみを保存（他の情報はJWTに含まれている）
       state.user.token = action.payload.data.data.token;
-
-      Cookies.set("clientID", action.payload.data.data.client_id, {
-        expires: 1,
-      });
-      Cookies.set("clientName", action.payload.data.data.client_name, {
-        expires: 1,
-      });
-      Cookies.set("employeeID", action.payload.data.data.employee_id, {
-        expires: 1,
-      });
-      Cookies.set("role", action.payload.data.data.role, {
-        expires: 1,
-      });
+      
+      // トークンのみをCookieに保存
       Cookies.set("token", action.payload.data.data.token.IdToken, {
         expires: 1,
       });
@@ -247,10 +244,46 @@ export const authSlice = createSlice({
       state.loginState.error = true;
     });
     builder.addCase(checkMail.fulfilled, () => {});
+    builder.addCase(logoutAPI.fulfilled, (state) => {
+      // API logout成功時にローカルログアウト処理を実行
+      state.loginState.isLoggedIn = false;
+      state.user = {
+        clientID: "",
+        clientName: "",
+        employeeID: "",
+        role: "",
+        token: "",
+      };
+
+      // Clear only token cookie
+      Cookies.remove("token");
+
+      // Clear localStorage and sessionStorage for security
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+    builder.addCase(logoutAPI.rejected, (state) => {
+      // API logout失敗時でもローカルログアウト処理は実行
+      state.loginState.isLoggedIn = false;
+      state.user = {
+        clientID: "",
+        clientName: "",
+        employeeID: "",
+        role: "",
+        token: "",
+      };
+
+      // Clear only token cookie
+      Cookies.remove("token");
+
+      // Clear localStorage and sessionStorage for security
+      localStorage.clear();
+      sessionStorage.clear();
+    });
   },
 });
 
 export default authSlice.reducer;
 
 // Export the action creators
-export const { logout, setRedirectPath, clearRedirectPath } = authSlice.actions;
+export const { logoutLocal, setRedirectPath, clearRedirectPath } = authSlice.actions;

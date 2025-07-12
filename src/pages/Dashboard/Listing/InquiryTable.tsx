@@ -1,5 +1,4 @@
 import { Add } from "@mui/icons-material";
-import Cookies from "js-cookie";
 import {
   Box,
   FormControl,
@@ -27,6 +26,7 @@ import { updateDetailedInquiry } from "../../../store/inquirySlice";
 import { DropDownArrowIcon } from "../../../common/icons";
 import MobileAccordionTable from "../../../components/MobileAccordionTable";
 import { spInquiryFieldConfig } from "../../../common/spTableRows";
+import { getRole } from "../../../utils/authUtils";
 
 // Extended interface to include method prop, data, pagination, and callbacks
 interface ExtendedCustomClientTableProps extends CustomClientTableProps {
@@ -77,7 +77,7 @@ const getInquiryColumns = (
       disableColumnMenu: true,
       headerClassName: "headerStyle",
       renderCell: (params: any) => (
-        <Link to={`/inquiry/${params.row.id}`} style={{ color: "#000" }}>
+        <Link to={`/properties/${params.row.property_id}`} style={{ color: "#000" }}>
           {`${params.row.property_name || ""}`}
         </Link>
       ),
@@ -335,7 +335,7 @@ const InquiryTable = ({
     onEmployeeUpdate
   );
   const navigate = useNavigate();
-  const role = Cookies.get("role");
+  const role = getRole();
 
   // Use the data passed from parent component
   const inquiry = data || [];

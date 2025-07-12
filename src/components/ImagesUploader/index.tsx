@@ -6,7 +6,7 @@ import { Box, CircularProgress } from '@mui/material';
 import CustomButton from '../CustomButton';
 import { CameraIcon, DeleteIcon } from '../../common/icons';
 import { ImagesUploaderProps } from '../../types';
-import Cookies from 'js-cookie';
+import { getEmployeeID, getRole } from '../../utils/authUtils';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -40,8 +40,8 @@ const ImagesUploader = memo(
     const loadingTimerRef = useRef<number | null>(null);
     const startTimeRef = useRef<number>(0);
     
-    const employeeId = Cookies.get('employeeID')
-    const role = Cookies.get('role')
+    const employeeId = getEmployeeID()
+    const role = getRole()
     const handleCloseModal = () => setOpenModal(false);
     const handleCancelClick = () => setOpenModal(false);
     const isAdmin = role === 'admin';

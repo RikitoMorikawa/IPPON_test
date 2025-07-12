@@ -427,6 +427,7 @@ export interface CustomerInteraction {
 export interface MiniTableListProps {
   data: CustomerInteraction[];
   headerLabels?: HeaderLabels;
+  onChange?: (data: CustomerInteraction[]) => void;
 }
 
 export interface CustomCheckboxGroupProps {

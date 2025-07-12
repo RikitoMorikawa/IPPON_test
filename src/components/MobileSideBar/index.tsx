@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import Cookies from "js-cookie";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import {
@@ -16,8 +15,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout, setRedirectPath } from "../../store/authSlice";
+import { logoutAPI, setRedirectPath } from "../../store/authSlice";
 import { AppDispatch } from "../../store";
+import { getClientName } from "../../utils/authUtils";
 
 const styled = {
   mobileDrawer: {
@@ -140,7 +140,7 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const clientName = Cookies.get("clientName");
+  const clientName = getClientName();
 
   const sidebarMenus = [
     {
@@ -226,9 +226,9 @@ const MobileSidebar = ({ open, onClose }: MobileSidebarProps) => {
     },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     dispatch(setRedirectPath(location.pathname + location.search));
-    dispatch(logout());
+    await dispatch(logoutAPI());
     navigate("/login");
     onClose();
   };

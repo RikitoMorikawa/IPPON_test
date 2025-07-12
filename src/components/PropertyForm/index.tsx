@@ -83,41 +83,142 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
 
   useEffect(() => {
     const customIsValid =
-      !typeState.error &&
-      !propertyNameState.error &&
-      !postCodeState.error &&
-      !prefectureState.error &&
-      !cityState.error &&
-      !salePriceState.error;
+      !typeState.error && !propertyNameState.error && !postCodeState.error && !prefectureState.error && !cityState.error && !salePriceState.error;
 
     setIsFormValid(customIsValid);
-  }, [
-    typeState,
-    propertyNameState,
-    postCodeState,
-    prefectureState,
-    cityState,
-    salePriceState,
-  ]);
+  }, [typeState, propertyNameState, postCodeState, prefectureState, cityState, salePriceState]);
+
+  // PropertyForm.tsx の useEffect 部分のみ修正
 
   useEffect(() => {
+    console.log("🔄 useEffect - defaultValues changed");
+    console.log("defaultValues:", defaultValues);
+
     if (!defaultValues) return;
 
-    const {
-      nearest_stations = [],
-      details = {},
-      image_urls = [],
-      ...rest
-    } = defaultValues;
+    const { nearest_stations = [], details = {}, image_urls = [], ...rest } = defaultValues;
+
+    console.log("📷 Processing image_urls:", image_urls);
+    console.log("image_urls type:", typeof image_urls);
+    console.log("image_urls isArray:", Array.isArray(image_urls));
 
     // Determine the selected category
     const selectedDetailCategory = defaultValues.type || "土地";
     setSelectedCategory(selectedDetailCategory);
     setValue("type", selectedDetailCategory);
 
-    // Construct the details object based on the selected category
-    let formattedDetails = {};
+    // 🔧 画像処理の修正 - より明確で一貫性のあるデータ構造を作成
+    let processedImages: any[] = [];
 
+    if (image_urls && Array.isArray(image_urls)) {
+      console.log("🖼️ Processing array of images:");
+
+      processedImages = image_urls
+        .map((imageItem: any, index: number) => {
+          console.log(`Image ${index}:`, imageItem);
+          console.log(`Image ${index} type:`, typeof imageItem);
+
+          // imageItem が文字列（URL）の場合
+          if (typeof imageItem === "string") {
+            console.log(`📸 Processing string image ${index}:`, imageItem);
+            return {
+              url: imageItem, // URLを直接格納
+              base64: imageItem, // 後方互換性のため
+              name: imageItem.split("/").pop() || `image-${index}`,
+            };
+          }
+
+          // imageItem がオブジェクトの場合
+          if (typeof imageItem === "object" && imageItem !== null) {
+            // image_urlsプロパティがある場合
+            if (imageItem.image_urls) {
+              const imageData = {
+                url: imageItem.image_urls,
+                base64: imageItem.image_urls, // 後方互換性
+                name: imageItem.name || imageItem.image_urls.split("/").pop() || `image-${index}`,
+                public_file_path: imageItem.public_file_path,
+              };
+              console.log(`📸 Processing object with image_urls ${index}:`, imageData);
+              return imageData;
+            }
+
+            // base64プロパティがある場合
+            if (imageItem.base64) {
+              const imageData = {
+                url: imageItem.base64,
+                base64: imageItem.base64,
+                name: imageItem.name || `image-${index}`,
+                public_file_path: imageItem.public_file_path,
+              };
+              console.log(`📸 Processing object with base64 ${index}:`, imageData);
+              return imageData;
+            }
+
+            // public_file_pathがある場合
+            if (imageItem.public_file_path) {
+              const imageData = {
+                url: imageItem.public_file_path,
+                base64: imageItem.public_file_path, // 後方互換性
+                name: imageItem.name || imageItem.public_file_path.split("/").pop() || `image-${index}`,
+                public_file_path: imageItem.public_file_path,
+              };
+              console.log(`📸 Processing object with public_file_path ${index}:`, imageData);
+              return imageData;
+            }
+
+            // その他のオブジェクトプロパティをチェック
+            const imageData = {
+              url: imageItem.url || imageItem.src || "",
+              base64: imageItem.base64 || imageItem.url || imageItem.src || "",
+              name: imageItem.name || `image-${index}`,
+              public_file_path: imageItem.public_file_path,
+            };
+            console.log(`📸 Processing generic object ${index}:`, imageData);
+            return imageData;
+          }
+
+          // その他の場合
+          console.log(`📸 Processing fallback image ${index}:`, imageItem);
+          return {
+            url: imageItem || "",
+            base64: imageItem || "",
+            name: `image-${index}`,
+          };
+        })
+        .filter((img) => img.url && img.url.trim() !== ""); // 空のURLを除外
+
+      console.log("🎯 Final processed images:", processedImages);
+      setImagesToShow(processedImages);
+    } else if (image_urls) {
+      console.log("🖼️ Processing non-array image_urls:", image_urls);
+
+      // 単一の画像の場合
+      let singleImageData;
+      if (typeof image_urls === "string") {
+        singleImageData = {
+          url: image_urls,
+          base64: image_urls,
+          name: image_urls.split("/").pop() || "image",
+        };
+      } else if (typeof image_urls === "object") {
+        singleImageData = {
+          url: image_urls.image_urls || image_urls.url || image_urls.base64 || "",
+          base64: image_urls.base64 || image_urls.image_urls || image_urls.url || "",
+          name: image_urls.name || "image",
+          public_file_path: image_urls.public_file_path,
+        };
+      }
+
+      processedImages = [singleImageData];
+      console.log("🎯 Setting imagesToShow (non-array):", processedImages);
+      setImagesToShow(processedImages);
+    } else {
+      console.log("❌ No image_urls found");
+      setImagesToShow([]);
+    }
+
+    // 詳細情報の処理
+    let formattedDetails = {};
     if (selectedDetailCategory === "マンション") {
       formattedDetails = {
         private_area: details.private_area || "",
@@ -161,28 +262,20 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       };
     }
 
-    if (image_urls && Array.isArray(image_urls)) {
-      const images = image_urls.map((image: any) => ({
-        base64: image.image_urls || "",
-      }));
-      images.forEach((image, index) => {
-        setValue(`images[${index}].base64`, image.base64);
-      });
-
-      setImagesToShow(images);
-    }
-
     // Reset the form with the combined values
     reset({
       ...rest,
-      image_urls: imagesToShow,
+      image_urls: processedImages, // 処理済み画像を設定
       type: selectedDetailCategory,
-      nearest_stations: nearest_stations.length
-        ? nearest_stations
-        : [{ line_name: "", station_name: "", walk_minutes: "" }],
+      nearest_stations: nearest_stations.length ? nearest_stations : [{ line_name: "", station_name: "", walk_minutes: "" }],
       ...formattedDetails,
     });
-  }, [defaultValues, formType, reset]);
+  }, [defaultValues, formType, reset, setValue]);
+
+  // imagesToShow が変更された時のログ
+  useEffect(() => {
+    console.log("📱 imagesToShow updated:", imagesToShow);
+  }, [imagesToShow]);
 
   const area = [
     { value: "01", label: "北海道" },
@@ -237,9 +330,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
     setDeletePaths(true);
     if (deletedPaths.length > 0) {
       setPropertyFileData(() => {
-        const filterPropertiesFile = defaultValues?.image_urls?.filter(
-          (data: any) => !deletedPaths?.includes(data?.image_urls)
-        );
+        const filterPropertiesFile = defaultValues?.image_urls?.filter((data: any) => !deletedPaths?.includes(data?.image_urls));
 
         return filterPropertiesFile;
       });
@@ -263,7 +354,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
           linkId,
           linkName,
         });
-        navigate(`/properties/${linkId}`);
+        navigate(`/properties`);
       } else if (createProperty.rejected.match(registeredResult)) {
         const responseData = registeredResult.payload as any;
         const message = responseData?.message;
@@ -280,9 +371,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
   const updateProperties = async (uploadFormData: any) => {
     const id = defaultValues.id;
     try {
-      const updatedResult = await dispatch(
-        updateProperty({ id, uploadFormData })
-      );
+      const updatedResult = await dispatch(updateProperty({ id, uploadFormData }));
       if (updateProperty.fulfilled.match(updatedResult)) {
         const responseData = updatedResult.payload as any;
         const linkId = responseData?.id || "";
@@ -293,7 +382,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
           linkId,
           linkName,
         });
-        navigate(`/properties`);
+        navigate(`/properties/${linkId}`);
       } else if (updateProperty.rejected.match(updatedResult)) {
         const responseData = updatedResult.payload as any;
         const message = responseData.error[0];
@@ -390,18 +479,13 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       //     (file:any) => typeof file === 'object', // Ensures only new files are selected
       //   );
       const newImageFiles = imageFiles;
-      const oldFiles =
-        defaultValues.image_urls?.map((file: any) => file.image_urls) || [];
+      const oldFiles = defaultValues.image_urls?.map((file: any) => file.image_urls) || [];
 
-      const oldFilesAfterDeleted =
-        propertyFileData?.map((file: any) => file.image_urls) || [];
+      const oldFilesAfterDeleted = propertyFileData?.map((file: any) => file.image_urls) || [];
 
-      const remainingOldFiles = oldFiles.filter((file: any) =>
-        oldFilesAfterDeleted.includes(file)
-      );
+      const remainingOldFiles = oldFiles.filter((file: any) => oldFilesAfterDeleted.includes(file));
 
-      const remainOldFilesToSend =
-        deletedImagePaths.length > 0 ? remainingOldFiles : oldFiles;
+      const remainOldFilesToSend = deletedImagePaths.length > 0 ? remainingOldFiles : oldFiles;
 
       // const base64Images = await Promise.all(
       // newImageFiles.map(async (file: any) => {
@@ -440,10 +524,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
     <form onSubmit={handleSubmit(handleFormSubmit)} className="properties">
       <Box sx={{ mb: 5 }}>
         <SectionTitle title="基本情報" />
-        <Box
-          className="propertiesFormInputsGroup"
-          sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-        >
+        <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
           <CustomFullWidthSelectInputGroup
             label="種別"
             name="type"
@@ -486,16 +567,14 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
             register={register}
             initialImages={imagesToShow}
             onImagesDeleted={handleImagesDeleted}
+            update={formType === "update" ? "true" : "false"} // 文字列のまま
           />
         </Box>
       </Box>
 
       <Box sx={{ mb: 5 }}>
         <SectionTitle title="所在地" />
-        <Box
-          className="propertiesFormInputsGroup"
-          sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-        >
+        <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
           <PostalCodeAutoAddressInput
             register={register}
             errors={errors}
@@ -583,11 +662,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
           {fields.map((field, index) => (
             <Box key={field.id}>
               {/* Desktop Layout - Your existing code unchanged */}
-              <Box
-                display={{ xs: "none", md: "flex" }}
-                gap={2}
-                alignItems="center"
-              >
+              <Box display={{ xs: "none", md: "flex" }} gap={2} alignItems="center">
                 <CustomTwoColInputGroup
                   label={index === 0 ? `最寄り駅` : ""}
                   firstName={`nearest_stations.${index}.line_name`}
@@ -604,12 +679,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
                   inputWidthSp={"100%"}
                   onRemove={() => remove(index)}
                 />
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  marginBottom={index == 0 ? 0 : "5px"}
-                  mt={index == 0 ? 1.7 : 0}
-                >
+                <Box display="flex" alignItems="center" marginBottom={index == 0 ? 0 : "5px"} mt={index == 0 ? 1.7 : 0}>
                   <Typography
                     align="right"
                     fontSize={12}
@@ -635,11 +705,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
                       },
                     })}
                     InputProps={{
-                      endAdornment: (
-                        <Typography sx={{ fontSize: "12px", color: "#3e3e3e" }}>
-                          分
-                        </Typography>
-                      ),
+                      endAdornment: <Typography sx={{ fontSize: "12px", color: "#3e3e3e" }}>分</Typography>,
                     }}
                     sx={{ width: 100 }}
                   />
@@ -660,18 +726,9 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
                   }}
                 >
                   {/* Header with title and remove button */}
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={2}
-                  >
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     {index === 0 && (
-                      <Typography
-                        fontSize={14}
-                        color="#3E3E3E"
-                        fontWeight={700}
-                      >
+                      <Typography fontSize={14} color="#3E3E3E" fontWeight={700}>
                         最寄り駅
                       </Typography>
                     )}
@@ -705,9 +762,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
                           transition: "all 0.2s ease",
                         }}
                       >
-                        <ClearIcon
-                          sx={{ fontSize: "14px", color: "#D9D9D9" }}
-                        />
+                        <ClearIcon sx={{ fontSize: "14px", color: "#D9D9D9" }} />
                       </Box>
                     )}
                   </Box>
@@ -725,23 +780,12 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
 
                   {/* Station name input */}
                   <Box mb={2}>
-                    <CustomTextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      placeholder="秋葉原駅"
-                      {...register(`nearest_stations.${index}.station_name`)}
-                    />
+                    <CustomTextField fullWidth variant="outlined" size="small" placeholder="秋葉原駅" {...register(`nearest_stations.${index}.station_name`)} />
                   </Box>
 
                   {/* Walking time section - Label outside input */}
                   <Box display="flex" alignItems="center" gap={2}>
-                    <Typography
-                      fontSize={12}
-                      color="#3E3E3E"
-                      fontWeight={700}
-                      sx={{ whiteSpace: "nowrap" }}
-                    >
+                    <Typography fontSize={12} color="#3E3E3E" fontWeight={700} sx={{ whiteSpace: "nowrap" }}>
                       まで徒歩
                     </Typography>
                     <CustomTextField
@@ -755,13 +799,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
                         },
                       })}
                       InputProps={{
-                        endAdornment: (
-                          <Typography
-                            sx={{ fontSize: "12px", color: "#3e3e3e" }}
-                          >
-                            分
-                          </Typography>
-                        ),
+                        endAdornment: <Typography sx={{ fontSize: "12px", color: "#3e3e3e" }}>分</Typography>,
                       }}
                     />
                   </Box>
@@ -788,10 +826,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
 
       <Box sx={{ mb: 5 }}>
         <SectionTitle title="オーナー情報" />
-        <Box
-          className="propertiesFormInputsGroup"
-          sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-        >
+        <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
           <CustomTwoColInputGroup
             label="氏名"
             firstName="owner_first_name"
@@ -866,10 +901,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       </Box>
       <Box sx={{ mb: 5 }}>
         <SectionTitle title="料金" />
-        <Box
-          className="propertiesFormInputsGroup"
-          sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-        >
+        <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
           <CustomFullWidthInputGroup
             label="価格"
             name="price"
@@ -907,10 +939,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       {selectedCategory === "マンション" ? (
         <Box sx={{ mb: 5 }}>
           <SectionTitle title="詳細情報" />
-          <Box
-            className="propertiesFormInputsGroup"
-            sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-          >
+          <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
             <CustomFullWidthInputGroup
               label="専有面積"
               name="private_area"
@@ -1061,10 +1090,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       ) : selectedCategory === "新築" ? (
         <Box sx={{ mb: 5 }}>
           <SectionTitle title="詳細情報" />
-          <Box
-            className="propertiesFormInputsGroup"
-            sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-          >
+          <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
             <CustomFullWidthInputGroup
               label="土地面積"
               name="land_area"
@@ -1254,10 +1280,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       ) : (
         <Box sx={{ mb: 5 }}>
           <SectionTitle title="詳細情報" />
-          <Box
-            className="propertiesFormInputsGroup"
-            sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-          >
+          <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
             <CustomFullWidthInputGroup
               label="詳細情報"
               name="land_area"
@@ -1355,10 +1378,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
       )}
       <Box sx={{ mb: 5 }}>
         <SectionTitle title="その他概要" />
-        <Box
-          className="propertiesFormInputsGroup"
-          sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}
-        >
+        <Box className="propertiesFormInputsGroup" sx={{ my: 2, maxWidth: "100%", pl: { lg: 5, xs: 0, md: 0, sm: 0 } }}>
           <CustomFullWidthInputGroup
             label="引渡し時期"
             name="delivery_time"
@@ -1458,11 +1478,7 @@ const PropertyForm = ({ defaultValues, formType }: PropertyFormProps) => {
           sx={{ width: { lg: "100px", xs: "80px" } }}
           label={`${formType === "update" ? "保存" : "登録"}`}
           type="submit"
-          disabled={
-            formType === "update"
-              ? !isDirty && !deletePaths
-              : !isFormValid && !isDirty
-          }
+          disabled={formType === "update" ? !isDirty && !deletePaths : !isFormValid && !isDirty}
           isLoading={formType !== "update" ? loading : updateLoading}
         />
       </div>

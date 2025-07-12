@@ -1,6 +1,5 @@
 // import { useEffect, useState } from "react";
 import { Add } from "@mui/icons-material";
-import Cookies from "js-cookie";
 import {
   Box,
   FormControl,
@@ -32,6 +31,7 @@ import { getEmployeeNames } from "../../../store/employeeSlice";
 import { DropDownArrowIcon } from "../../../common/icons";
 import { spInquiryFieldConfig } from "../../../common/spTableRows";
 import MobileAccordionTable from "../../../components/MobileAccordionTable";
+import { getRole } from "../../../utils/authUtils";
 
 // Define the search parameters interface - Updated to match API requirements
 interface SearchParams {
@@ -80,7 +80,7 @@ const getInquiryColumns = (
       flex: 1,
       headerClassName: "headerStyle",
       renderCell: (params: any) => (
-        <Link to={`/inquiry/${params.row.id}`} style={{ color: "#000" }}>
+        <Link to={`/properties/${params.row.property_id}`} style={{ color: "#000" }}>
           {`${params.row.property_name || ""}`}
         </Link>
       ),
@@ -319,7 +319,7 @@ const InquiryListing = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const role = Cookies.get("role");
+  const role = getRole();
   const { data: inquiryData } = useSelector(
     (state: any) => state.inquiry.searched
   );
@@ -428,6 +428,7 @@ const InquiryListing = () => {
             " " +
             inquiry?.inquiry?.customer?.first_name,
           property_name: inquiry?.inquiry?.property?.name,
+          property_id: inquiry?.inquiry?.property?.id || "",
           type: inquiry?.inquiry?.type,
           content: inquiry?.inquiry?.summary,
           manager: inquiry?.manager || "",

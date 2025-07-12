@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Add, Search } from "@mui/icons-material";
-import Cookies from "js-cookie";
 import { Box, Stack, useMediaQuery } from "@mui/material";
+import { getRole } from "../../../utils/authUtils";
 import Table from "../../../components/Table";
 import { employeeColumns } from "../../../common/tableColumns";
 import SectionTitle from "../../../components/SectionTitle";
@@ -38,8 +38,8 @@ const EmployeesListing = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, setValue } = useForm();
-  // const clientId = Cookies.get('clientID')
-  const role = Cookies.get("role");
+  // const clientId = getClientID()
+  const role = getRole();
   const { data: employeesData, loading: isSearchLoading } = useSelector(
     (state: any) => state.employees.searched
   );

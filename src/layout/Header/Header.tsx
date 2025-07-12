@@ -9,16 +9,15 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useState } from "react";
-// import Cookies from 'js-cookie';
 import { useNavigate, useLocation } from "react-router";
 import DynamicBreadcrumb from "./DynamicBreadCrumb";
 import profileImg from "../../assets/profile_img.png";
 import { useSelector, useDispatch } from "react-redux";
-import Cookies from "js-cookie";
-import { logout, setRedirectPath } from "../../store/authSlice";
+import { logoutAPI, setRedirectPath } from "../../store/authSlice";
 import { AppDispatch } from "../../store";
+import { getEmployeeID, getFullName } from "../../utils/authUtils";
 
-// const member_id = Cookies.get('employeeID')
+// const member_id = getEmployeeID()
 
 const Header = () => {
   const settings = [
@@ -32,7 +31,7 @@ const Header = () => {
     // },
     {
       title: "プロフィール",
-      link: `/setting/employees/` + Cookies.get("employeeID"),
+      link: `/setting/employees/` + getEmployeeID(),
     },
     {
       title: "ログアウト",
@@ -56,12 +55,7 @@ const Header = () => {
   const { data: employeeData } = useSelector(
     (state: any) => state.employees.detailed
   );
-  const clientName = Cookies.get("clientName");
-  console.log("クッキーの中身", Cookies.get());
-  console.log("名前の取得情報の更新", clientName);
-  console.log("inquiryData", inquiryData);
-  console.log("propertiesInquiriesData", propertiesInquiriesData);
-
+  const clientName = getFullName();
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -70,12 +64,12 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  const handleClickMenuItem = (setting: any) => {
+  const handleClickMenuItem = async (setting: any) => {
     if (setting.action === "logout") {
       // Save current location before logout
       dispatch(setRedirectPath(location.pathname + location.search));
-      // Dispatch logout action to clear all auth state and cookies
-      dispatch(logout());
+      // Dispatch logout API action to clear all auth state and cookies
+      await dispatch(logoutAPI());
       navigate("/login");
     } else if (setting.link) {
       navigate(setting.link);
@@ -159,11 +153,11 @@ const Header = () => {
                 <IconButton
                   sx={{ p: 0.5, mr: 0.6, border: "1px solid #e0e0e0" }}
                 >
-                  <Avatar
-                    alt={clientName}
-                    src={profileImg}
-                    sx={{ width: 25, height: 25 }}
-                  />
+                                  <Avatar
+                  alt={clientName || ''}
+                  src={profileImg}
+                  sx={{ width: 25, height: 25 }}
+                />
                 </IconButton>
                 <Typography
                   variant="body2"
